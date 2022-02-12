@@ -1,4 +1,4 @@
-import {ADMIN_USERNAME, SESSION_STORAGE_USER_NAME} from "../utils/SECURITY"
+import {ADMIN_EMAIL, SESSION_STORAGE_USER_NAME} from "../utils/SECURITY"
 
 class Auth {
     constructor() {
@@ -35,7 +35,7 @@ class Auth {
     }
   
     isAdministrator() {
-      return this.authenticated ? this.user.username === ADMIN_USERNAME : false;
+      return this.authenticated ? this.user.email === ADMIN_EMAIL : false;
     }
 }
 

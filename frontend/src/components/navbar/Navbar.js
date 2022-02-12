@@ -9,16 +9,12 @@ function Navbar() {
   let navigate = useNavigate();
 
   function checkAuthentication() {
-    return !Auth.isAuthenticated() ? (
+    return Auth.isAuthenticated() ? (
       <>
-        <button className="mx-2 btn btn-outline-dark" type="submit">
-          <i className="bi-cart-fill me-1"></i>
-          Cart
-          <span className="badge bg-dark text-white ms-1 rounded-pill">0</span>
-        </button>
+        {checkIfAdmin()}
         <button
           className="mx-2 btn btn-outline-danger text-right"
-          type="submit"
+          onClick={() => Auth.logout(navigate(URL_LOGIN))}
         >
           <i className="bi-cart-fill me-1"></i>
           Déconnexion
@@ -42,6 +38,29 @@ function Navbar() {
         </button>
       </>
     );
+  }
+
+  function checkIfAdmin() {
+    if (Auth.isAdministrator()) {
+      return (
+        <div className="menu-item">
+      <p className="menu-item-title">Options</p>
+      <ul>
+        <li className="menu-item-button">temp</li>
+        <li className="menu-item-button">temp</li>
+        <li className="menu-item-button">temp</li>
+      </ul>
+    </div>
+      );
+    } else {
+      return (
+        <button className="mx-2 btn btn-outline-dark" type="submit">
+          <i className="bi-cart-fill me-1"></i>
+          Cart
+          <span className="badge bg-dark text-white ms-1 rounded-pill">0</span>
+        </button>
+      );
+    }
   }
 
   return (
@@ -83,7 +102,9 @@ function Navbar() {
               </button>
             </form>
           </div>
-          <div className="d-flex justify-content-between mx-2 mt-3 mt-lg-0">{checkAuthentication()}</div>
+          <div className="d-flex justify-content-between mx-2 mt-3 mt-lg-0">
+            {checkAuthentication()}
+          </div>
         </div>
       </div>
     </nav>

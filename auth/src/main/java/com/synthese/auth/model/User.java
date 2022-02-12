@@ -15,5 +15,7 @@ public class User extends Entity {
     @Indexed(unique = true)
     protected String email;
     protected String password;
+    private String firstName;
+    private String lastName;
 
 }

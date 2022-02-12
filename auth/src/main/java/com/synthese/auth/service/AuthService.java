@@ -27,7 +27,7 @@ public class AuthService {
     public Optional<Client> signUp(Client client) {
         Optional<Client> optionalStudent = Optional.empty();
         try {
-            clientRepository.save(client);
+            optionalStudent = Optional.of(clientRepository.save(client));
         } catch (DuplicateKeyException exception) {
             logger.error("A duplicated key was found in signUp (Student) : " + exception.getMessage());
         }
