@@ -7,6 +7,17 @@ import {
     URL_SUBSCRIBE
 } from "./URL.js"
 
+export const OPTIONS_ADMIN = [
+    {
+        link: URL_LOGIN,
+        title: "temp 1"
+    },
+    {
+        link: URL_SUBSCRIBE,
+        title: "temp 2"
+    }
+]
+
 export const ROUTES = [
     {
         link : URL_HOME,

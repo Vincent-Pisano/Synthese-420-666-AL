@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { URL_HOME, URL_LOGIN, URL_SUBSCRIBE } from "../../utils/URL";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { OPTIONS_ADMIN } from "../../utils/PATH";
 
 function Navbar() {
   let navigate = useNavigate();
@@ -46,9 +47,16 @@ function Navbar() {
         <div className="menu-item">
       <p className="menu-item-title">Options</p>
       <ul>
-        <li className="menu-item-button">temp</li>
-        <li className="menu-item-button">temp</li>
-        <li className="menu-item-button">temp</li>
+      {OPTIONS_ADMIN.map((options, i) => (
+          <li key={i}>
+            <button
+              className="menu-item-button"
+              onClick={() => navigate(options.link)}
+            >
+              {options.title}
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
       );
