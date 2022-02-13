@@ -21,8 +21,8 @@ public class AuthController {
     }
 
     @PostMapping(URL_SIGN_UP_CLIENT)
-    public ResponseEntity<Client> signUpStudent(@RequestBody Client client) {
-        return service.signUp(client)
+    public ResponseEntity<Client> signUpClient(@RequestBody Client client) {
+        return service.signUpClient(client)
                 .map(_client -> ResponseEntity.status(HttpStatus.CREATED).body(_client))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }

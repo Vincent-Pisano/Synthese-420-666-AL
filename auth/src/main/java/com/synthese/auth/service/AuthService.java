@@ -24,7 +24,7 @@ public class AuthService {
         this.clientRepository = clientRepository;
     }
 
-    public Optional<Client> signUp(Client client) {
+    public Optional<Client> signUpClient(Client client) {
         Optional<Client> optionalStudent = Optional.empty();
         try {
             optionalStudent = Optional.of(clientRepository.save(client));
