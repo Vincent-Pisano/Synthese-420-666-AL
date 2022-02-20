@@ -6,7 +6,6 @@ import { useFormFields } from "../../services/FormFields";
 import { ERROR_EMAIL_ALREADY_EXISTS } from "../../utils/MESSAGE";
 import { SUBSCRIBE_CLIENT } from "../../utils/API";
 import auth from "../../services/Auth";
-import "./auth.css";
 
 const Subscribe = () => {
   let navigate = useNavigate();
@@ -46,7 +45,7 @@ const Subscribe = () => {
   }
 
   return (
-    <div className="login-dark">
+    <div className="form-dark">
       <form onSubmit={(e) => onCreatePost(e)}>
         <h2 className="mb-5">Inscription</h2>
         <div className="d-flex justify-content-between">

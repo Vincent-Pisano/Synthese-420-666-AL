@@ -7,7 +7,6 @@ import { ERROR_ACCOUNT_NOT_FOUND } from "../../utils/MESSAGE";
 import { LOGIN_ADMIN, LOGIN_CLIENT } from "../../utils/API";
 import { ADMIN_EMAIL } from "../../utils/SECURITY"
 import auth from "../../services/Auth";
-import "./auth.css";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -58,7 +57,7 @@ const Login = () => {
   }
 
   return (
-    <div className="login-dark">
+    <div className="form-dark">
       <form onSubmit={(e) => onCreatePost(e)}>
         <h2 className="mb-5">Connexion</h2>
         <div className="form-group my-3">

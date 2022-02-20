@@ -8,3 +8,6 @@ const URL_SHIPPING = "http://localhost:7872/";
 export const SUBSCRIBE_CLIENT = URL_AUTH + "signUp"
 export const LOGIN_CLIENT = URL_AUTH + "login/client/"
 export const LOGIN_ADMIN = URL_AUTH + "login/admin/"
+
+//INVENTORY
+export const SAVE_ITEM = URL_INVENTORY + "add/item"

@@ -159,3 +159,65 @@
     width: 150%;
   }
 }
+
+/*
+*
+* FORM
+*
+*/
+
+.form-dark {
+  background-size:cover;
+  position:relative;
+  padding-bottom: 150px;
+}
+
+.form-dark form {
+  max-width:500px;
+  width:90%;
+  background-color:rgb(33, 37, 41);
+  padding:40px;
+  border-radius:4px;
+  transform:translate(-50%, 10%);
+  position:relative;
+  top:50%;
+  left:50%;
+  color:#fff;
+  box-shadow:3px 3px 4px rgba(0,0,0,0.4);
+}
+
+.form-dark .illustration {
+  text-align:center;
+  padding:15px 0 20px;
+  font-size:100px;
+  color:#2980ef;
+}
+
+.form-dark form .form-control {
+  background:none;
+  border:none;
+  border-bottom:1px solid #4b5055;
+  border-radius:0;
+  box-shadow:none;
+  outline:none;
+  color:inherit;
+}
+
+.form-dark form .forgot {
+  display:block;
+  text-align:center;
+  font-size:12px;
+  color:#6f7a85;
+  opacity:0.9;
+  text-decoration:none;
+  cursor: pointer;
+}
+
+.form-dark form .forgot:hover, .form-dark form .forgot:active {
+  opacity:1;
+  text-decoration:none;
+}
+
+.form-dark form .btn-primary:active {
+  transform:translateY(1px);
+}

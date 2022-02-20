@@ -13,13 +13,13 @@ public class Utils {
 
     public static final String ID = "62082f071f32b05b7b0706f1";
 
-    public final static Client getClientWithID() {
+    public static Client getClientWithID() {
         return getClientWithoutID().toBuilder()
                 .id(ID)
                 .build();
     }
 
-    public final static Client getClientWithoutID() {
+    public static Client getClientWithoutID() {
         return Client.builder()
                 .firstName("un")
                 .lastName("client")
@@ -28,13 +28,13 @@ public class Utils {
                 .build();
     }
 
-    public final static Admin getAdminWithID() {
+    public static Admin getAdminWithID() {
         return getAdminWithoutID().toBuilder()
                 .id(ID)
                 .build();
     }
 
-    public final static Admin getAdminWithoutID() {
+    public static Admin getAdminWithoutID() {
         return Admin.builder()
                 .firstName("un")
                 .lastName("admin")
