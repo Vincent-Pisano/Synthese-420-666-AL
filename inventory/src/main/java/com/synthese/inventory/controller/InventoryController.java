@@ -2,13 +2,15 @@ package com.synthese.inventory.controller;
 
 import com.synthese.inventory.model.Item;
 import com.synthese.inventory.service.InventoryService;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.util.List;
 
 import static com.synthese.inventory.utils.Utils.*;
 import static com.synthese.inventory.utils.Utils.InventoryControllerUrl.*;
@@ -30,6 +32,25 @@ public class InventoryController {
                                                     @RequestPart(name = REQUEST_PART_IMAGE) MultipartFile multipartFile) {
         return service.saveItem(itemJSON, multipartFile)
                 .map(_item -> ResponseEntity.status(HttpStatus.CREATED).body(_item))
+                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
+
+    @GetMapping(URL_GET_ITEMS_FROM_CATEGORY)
+    public ResponseEntity<List<Item>> getItemsFromCategory(@PathVariable Item.ItemCategory category) {
+        return service.getItemsFromCategory(category)
+                .map(_items -> ResponseEntity.status(HttpStatus.ACCEPTED).body(_items))
+                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
+
+    @GetMapping(value = URL_GET_IMAGE, produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<InputStreamResource> getSignature(@PathVariable String id){
+        return service.getImage(id)
+                .map(signature -> ResponseEntity
+                        .status(HttpStatus.ACCEPTED)
+                        .contentType(MediaType.IMAGE_PNG)
+                        .body(new InputStreamResource(
+                                new ByteArrayInputStream(signature))
+                        ))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,4 +69,16 @@ public class InventoryService {
         return image;
     }
 
+    public Optional<List<Item>> getItemsFromCategory(Item.ItemCategory category) {
+        List<Item> items =
+                itemRepository.findAllByCategoryOrderByCreationDateDesc(category);
+        return items.isEmpty() ? Optional.empty() : Optional.of(items);
+    }
+
+    public Optional<byte[]> getImage(String id) {
+        Optional<byte[]> image;
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        image = optionalItem.map(item -> item.getImage().getData());
+        return image;
+    }
 }

@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static com.synthese.inventory.utils.Utils.*;
@@ -33,7 +35,9 @@ class InventoryServiceTest {
 
     //global variables
     private Item expectedItem;
+    private List<Item> expectedItems;
     private Item givenItem;
+    private Binary expectedImage;
 
     @Test
     //@Disabled
@@ -58,6 +62,47 @@ class InventoryServiceTest {
         assertThat(optionalItem.isPresent()).isTrue();
         assertThat(actualItem.getImage()).isNotNull();
         assertThat(actualItem.getId()).isEqualTo(expectedItem.getId());
+    }
+
+    @Test
+    //@Disabled
+    public void getItemsFromCategory() throws IOException {
+        //Arrange
+        expectedItems = getListOfItems();
+        when(itemRepository.findAllByCategoryOrderByCreationDateDesc(CATEGORY_OTHER))
+                .thenReturn(expectedItems);
+
+        //Act
+        final Optional<List<Item>> optionalItems =
+                service.getItemsFromCategory(CATEGORY_OTHER);
+
+        //Assert
+        List<Item> actualItems = optionalItems.orElse(null);
+
+        assertThat(optionalItems.isPresent()).isTrue();
+        assertThat(actualItems.size()).isEqualTo(expectedItems.size());
+    }
+
+
+    @Test
+    //@Disabled
+    public void testGetImage() throws Exception {
+        //Arrange
+        expectedImage = getImage();
+        expectedItem = getItemWithID();
+
+        when(itemRepository.findById(ID))
+                .thenReturn(Optional.ofNullable(expectedItem));
+
+        //Act
+        final Optional<byte[]> optionalImage =
+                service.getImage(ID);
+
+        //Assert
+        byte[] actualImage = optionalImage.orElse(null);
+
+        assertThat(actualImage).isNotNull();
+        assertThat(actualImage).isEqualTo(expectedImage.getData());
     }
 
 }

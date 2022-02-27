@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
@@ -28,8 +29,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.assertj.core.api.Assertions.assertThat;
 import static com.synthese.inventory.utils.Utils.*;
 import static com.synthese.inventory.utils.Utils.InventoryControllerUrl.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@WebMvcTest(InventoryControllerTest.class)
+@WebMvcTest(InventoryController.class)
 class InventoryControllerTest {
 
     @Autowired
@@ -40,13 +42,14 @@ class InventoryControllerTest {
 
     //global variables
     private Item expectedItem;
+    private List<Item> expectedItems;
     private Item givenItem;
+    private Binary expectedImage;
 
     @Test
     //@Disabled
     public  void testSaveItem() throws Exception {
         //Arrange
-        Binary image = getImage();
         var multipartFile = mock(MultipartFile.class);
 
         expectedItem = getItemWithID();
@@ -72,5 +75,46 @@ class InventoryControllerTest {
         MockHttpServletResponse response = result.getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    //@Disabled
+    public void testGetItemsFromCategory() throws Exception {
+        //Arrange
+        expectedItems = getListOfItems();
+
+        when(service.getItemsFromCategory(CATEGORY_OTHER))
+                .thenReturn(Optional.ofNullable(expectedItems));
+
+        //Act
+        MvcResult result = mockMvc.perform(get(
+                URL_GET_ITEMS_FROM_CATEGORY + CATEGORY_OTHER.name())
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+
+        //Assert
+        MockHttpServletResponse response = result.getResponse();
+        var actualItems = new ObjectMapper().readValue(response.getContentAsString(), List.class);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
+        assertThat(actualItems).isNotNull();
+    }
+
+    @Test
+    //@Disabled
+    public void testGetImage() throws Exception {
+        //Arrange
+        expectedImage = getImage();
+
+        when(service.getImage(ID))
+                .thenReturn(Optional.of(expectedImage.getData()));
+
+        //Act
+        MvcResult result = mockMvc.perform(get(URL_GET_IMAGE + ID)
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+
+        //Assert
+        MockHttpServletResponse response = result.getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
     }
 }

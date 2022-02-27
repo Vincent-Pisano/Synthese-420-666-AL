@@ -8,14 +8,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
     public static class InventoryControllerUrl {
         public final static String URL_ADD_ITEM = "/add/item";
+        public final static String URL_GET_ITEMS_FROM_CATEGORY = "/get/items/category/";
+        public final static String URL_GET_IMAGE = "/get/image/";
     }
 
     public static final String ID = "62082f071f32b05b7b0706f1";
+    public static final Item.ItemCategory CATEGORY_OTHER = Item.ItemCategory.OTHER;
     public final static String IMAGE_FILEPATH =
             System.getProperty("user.dir") + "\\src\\test\\resources\\assets\\image.jpg";
 
@@ -34,10 +39,17 @@ public class Utils {
                 .isOnSale(false)
                 .beforeSalePrice(150.69f)
                 .quantity(10)
-                .category(Item.ItemCategory.OTHER)
+                .category(CATEGORY_OTHER)
                 .status(Item.ItemStatus.HIDDEN)
                 .image(getImage())
                 .build();
+    }
+
+    public static List<Item> getListOfItems() throws IOException {
+        List<Item> items = new ArrayList<>();
+        items.add(getItemWithID());
+        items.add(getItemWithID());
+        return items;
     }
 
     public static Binary getImage() throws IOException {
