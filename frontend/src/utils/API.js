@@ -11,3 +11,5 @@ export const LOGIN_ADMIN = URL_AUTH + "login/admin/"
 
 //INVENTORY
 export const SAVE_ITEM = URL_INVENTORY + "add/item"
+export const GET_ITEMS_FROM_CATEGORY = URL_INVENTORY + "get/items/category/"
+export const GET_ITEM_IMAGE = URL_INVENTORY + "get/image/"

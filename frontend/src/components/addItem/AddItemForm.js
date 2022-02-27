@@ -148,7 +148,7 @@ const AddItemForm = () => {
           />
         </div>
         <div className="form-group my-3">
-          <label for="image" class="btn btn-outline-light my-3">
+          <label htmlFor="image" className="btn btn-outline-light my-3">
             {image !== undefined ? "Changer l'image" : "Selectionner l'image"}
           </label>
           <input

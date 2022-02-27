@@ -1,33 +1,53 @@
 import React from "react";
+import { GET_ITEM_IMAGE } from "../../utils/API";
 
 const Item = ({ item }) => {
+  function CheckIfNew() {
+    var date = new Date();
+    date.setDate(date.getDate() - 2);
+    return new Date(item.creationDate) > date;
+  }
+
   return (
-    <div className="col mb-5">
-      <div className="card h-100">
-        {item.isOnSale ? (
-          <div className="badge bg-dark text-white position-absolute">Sale</div>
+    <div className="col mb-5" style={{minWidth: "18rem"}}>
+      <div className="card h-100" style={{ minHeight: "100%" }}>
+        {item.onSale ? (
+          <div className="position-relative">
+            <div className="badge bg-danger text-white position-absolute m-2">
+              Promotion
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {CheckIfNew() ? (
+          <div className="position-relative">
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+              Nouveau
+            </span>
+          </div>
         ) : (
           <></>
         )}
         <img
-          className="card-img-top"
-          src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+          className="card-img-top" style={{height:"10rem"}}
+          src={GET_ITEM_IMAGE + item.id}
           alt="..."
         />
         <div className="card-body p-4">
           <div className="text-center">
             <h5 className="fw-bolder">{item.name}</h5>
-            {item.isOnSale ? (
+            {item.onSale ? (
               <>
                 <span className="text-muted text-decoration-line-through">
-                  ${item.oldPrice.toFixed(2)}
+                  ${item.beforeSalePrice.toFixed(2)}
                 </span>
                 -
               </>
             ) : (
               <></>
             )}
-            ${item.currentPrice.toFixed(2)}
+            ${item.price.toFixed(2)}
           </div>
         </div>
         <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
