@@ -45,8 +45,8 @@ const Subscribe = () => {
   }
 
   return (
-    <div className="form-dark" style={{marginTop: "10%"}}>
-      <form onSubmit={(e) => onCreatePost(e)}>
+    <div className="form-dark" style={{marginTop: "10%", paddingBottom:"150px"}}>
+      <form className="form-dark-form" onSubmit={(e) => onCreatePost(e)}>
         <h2 className="mb-5">Inscription</h2>
         <div className="d-flex justify-content-between">
           <div className="form-group my-2">

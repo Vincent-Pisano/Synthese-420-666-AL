@@ -1,7 +1,8 @@
 import React from "react";
+import Auth from "../../services/Auth";
 import { GET_ITEM_IMAGE } from "../../utils/API";
 
-const Item = ({ item }) => {
+const Item = ({ item, onClick }) => {
   function CheckIfNew() {
     var date = new Date();
     date.setDate(date.getDate() - 2);
@@ -36,7 +37,7 @@ const Item = ({ item }) => {
         />
         <div className="card-body p-4">
           <div className="text-center">
-            <h5 className="fw-bolder">{item.name}</h5>
+            <h5 className={!Auth.isAdministrator() ? "fw-bolder" : item.status === "HIDDEN" ? "fw-bolder text-danger" : "fw-bolder text-success"}>{item.name}</h5>
             {item.onSale ? (
               <>
                 <span className="text-muted text-decoration-line-through">
@@ -52,9 +53,9 @@ const Item = ({ item }) => {
         </div>
         <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
           <div className="text-center">
-            <a className="btn btn-outline-dark mt-auto" href="#">
+            <button className="btn btn-outline-dark mt-auto" onClick={() => onClick(item)}>
               Voir les options
-            </a>
+            </button>
           </div>
         </div>
       </div>

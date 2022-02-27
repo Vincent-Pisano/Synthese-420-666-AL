@@ -30,7 +30,10 @@ public class InventoryService {
         Optional<Item> optionalItem = Optional.empty();
 
         try {
-            optionalItem = Optional.of(itemRepository.save(getItem(itemJSON, multipartFile)));
+            Item item = getItem(itemJSON, multipartFile);
+            if (item.getId() != null && item.getImage() == null)
+                itemRepository.findById(item.getId()).ifPresent(item1 -> item.setImage(item1.getImage()));
+            optionalItem = Optional.of(itemRepository.save(item));
         } catch (DuplicateKeyException exception) {
             logger.error("A duplicated key was found in InventoryService.saveItem : " + exception.getMessage());
         }
@@ -40,7 +43,7 @@ public class InventoryService {
 
     private Item getItem(String itemJSON, MultipartFile multipartFile){
         Item item = mapItem(itemJSON);
-        if (item != null) {
+        if (item != null && multipartFile != null) {
             item.setImage(extractImage(multipartFile));
         }
         return item;
@@ -69,6 +72,8 @@ public class InventoryService {
         return image;
     }
 
+    //pour admin
+    // quand arrivé à client, ne pas oublié de supprimer les items HIDDEN
     public Optional<List<Item>> getItemsFromCategory(Item.ItemCategory category) {
         List<Item> items =
                 itemRepository.findAllByCategoryOrderByCreationDateDesc(category);
@@ -78,7 +83,10 @@ public class InventoryService {
     public Optional<byte[]> getImage(String id) {
         Optional<byte[]> image;
         Optional<Item> optionalItem = itemRepository.findById(id);
-        image = optionalItem.map(item -> item.getImage().getData());
+        image = optionalItem.map(item -> {
+            Binary imageBinary = item.getImage();
+            return imageBinary.getData();
+        });
         return image;
     }
 }

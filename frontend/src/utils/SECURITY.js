@@ -18,5 +18,15 @@ export const CATEGORIES = [
         value: "CLOTHES",
         name:"Vêtements"
     },
+]
 
+export const ITEM_STATUS = [
+    {
+        value:"HIDDEN",
+        name:"invisible"
+    },
+    {
+        value:"VISIBLE",
+        name:"visible"
+    }
 ]

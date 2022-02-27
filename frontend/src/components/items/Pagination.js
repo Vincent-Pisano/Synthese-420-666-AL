@@ -16,7 +16,7 @@ const Pagination = ({ currentPage, setCurrentPage, items }) => {
               </button>
             </li>
             {items.map((items, i) => (
-              <li className="page-item">
+              <li className="page-item" key={i}>
                 <button
                 className={currentPage === i ? "page-link bg-dark text-white" : "page-link text-dark "}
                 onClick={() => setCurrentPage(i)}>

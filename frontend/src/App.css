@@ -169,14 +169,16 @@
 .form-dark {
   background-size:cover;
   position:relative;
-  padding-bottom: 150px;
 }
 
 .form-dark form {
+  padding:40px;  
+}
+
+.form-dark-form {
   max-width:500px;
   width:90%;
   background-color:rgb(33, 37, 41);
-  padding:40px;
   border-radius:4px;
   transform:translate(-50%, 10%);
   position:relative;

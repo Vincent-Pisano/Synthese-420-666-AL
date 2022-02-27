@@ -2,29 +2,53 @@ import axios from "axios";
 import { React, useState } from "react";
 import { useNavigate } from "react-router";
 import { useFormFields } from "../../services/FormFields";
-import { SAVE_ITEM } from "../../utils/API";
-import { CONFIRM_ADD_ITEM, ERROR_INVALID_ITEM } from "../../utils/MESSAGE";
-import { CATEGORIES } from "../../utils/SECURITY";
+import { GET_ITEM_IMAGE, SAVE_ITEM } from "../../utils/API";
+import {
+  CONFIRM_ADD_ITEM,
+  CONFIRM_UPDATE_ITEM,
+  ERROR_INVALID_ITEM,
+} from "../../utils/MESSAGE";
+import { CATEGORIES, ITEM_STATUS } from "../../utils/SECURITY";
 import { URL_HOME } from "../../utils/URL";
 
-const AddItemForm = () => {
+const AddItemForm = ({ isModal, item, handleClose }) => {
   let navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
   const [image, setImage] = useState(undefined);
 
-  const [fields, handleFieldChange] = useFormFields({
-    name: "",
-    description: "",
-    price: undefined,
-    quantity: undefined,
-    category: "OTHER",
-  });
+  const [fields, handleFieldChange] = useFormFields(
+    item !== undefined
+      ? item
+      : {
+          name: "",
+          description: "",
+          price: undefined,
+          quantity: undefined,
+          category: "OTHER",
+        }
+  );
 
   function onCreatePost(e) {
     e.preventDefault();
-    if (image !== undefined) {
-      addItem();
+    if (image !== undefined || item !== undefined) {
+      if (
+        item !== undefined &&
+        JSON.stringify(item) === JSON.stringify(fields) && image === undefined
+      ) {
+        setErrorMessage("Aucune modification effectuée");
+      } else {
+        let formfields = fields;
+        if (
+          item !== undefined &&
+          formfields.onSale &&
+          (formfields.beforeSalePrice !== item.beforeSalePrice ||
+            formfields.beforeSalePrice === 0)
+        ) {
+          formfields.beforeSalePrice = item.price;
+        }
+        addItem(formfields);
+      }
     } else {
       setErrorMessage("Veuillez ajouter l'image du produit");
     }
@@ -35,7 +59,8 @@ const AddItemForm = () => {
       return (
         <div
           className={
-            errorMessage === CONFIRM_ADD_ITEM
+            errorMessage === CONFIRM_ADD_ITEM ||
+            errorMessage === CONFIRM_UPDATE_ITEM
               ? "alert alert-success"
               : "alert alert-danger"
           }
@@ -56,30 +81,136 @@ const AddItemForm = () => {
           alt="Produit"
         />
       );
+    } else if (item !== undefined) {
+      return (
+        <img
+          style={{ height: "100%", width: "100%" }}
+          alt="Produit"
+          src={GET_ITEM_IMAGE + item.id}
+        />
+      );
     }
   }
 
-  function addItem() {
+  function addItem(formfields) {
     let formData = new FormData();
-    formData.append("item", JSON.stringify(fields));
+
+    formData.append("item", JSON.stringify(formfields));
     formData.append("image", image);
     axios
       .post(SAVE_ITEM, formData)
       .then((response) => {
-        setTimeout(() => {
-          navigate(URL_HOME);
-        }, 3000);
-        setErrorMessage(CONFIRM_ADD_ITEM);
+        if (item !== undefined) {
+          setTimeout(() => {
+            handleClose();
+          }, 3000);
+          setErrorMessage(CONFIRM_UPDATE_ITEM);
+        } else {
+          setTimeout(() => {
+            navigate(URL_HOME);
+          }, 3000);
+          setErrorMessage(CONFIRM_ADD_ITEM);
+        }
       })
       .catch((error) => {
         setErrorMessage(ERROR_INVALID_ITEM);
       });
   }
 
+  function showRedirection() {
+    if (item === undefined) {
+      return (
+        <p className="forgot" onClick={() => navigate(URL_HOME)}>
+          Voir la liste des produits
+        </p>
+      );
+    }
+  }
+
+  function showPromotion() {
+    if (item !== undefined) {
+      return (
+        <>
+          <div className="form-check my-3">
+            <input
+              defaultChecked={fields.onSale}
+              onChange={handleFieldChange}
+              className="form-check-input"
+              name="onSale"
+              id="onSale"
+              type="checkbox"
+            />
+            <label className="form-check-label" htmlFor="onSale">
+              {" "}
+              Promotion{" "}
+            </label>
+          </div>
+        </>
+      );
+    }
+  }
+
+  function showStatus() {
+    if (item !== undefined) {
+      return (
+        <div className="form-group my-3">
+          <select
+            className="form-control"
+            defaultValue={fields.status}
+            onChange={handleFieldChange}
+            id="status"
+            placeholder="Catégorie"
+            required
+          >
+            {ITEM_STATUS.map((status, key) => {
+              return (
+                <option className="text-dark" key={key} value={status.value}>
+                  {status.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      );
+    }
+  }
+
+  function showDeleteProduit() {
+    if (item !== undefined) {
+      return (
+        <div className="form-group">
+          <button
+            className="btn btn-outline-danger my-3"
+            type="button"
+            onClick={() => deleteProduit()}
+          >
+            Supprimer le produit
+          </button>
+        </div>
+      );
+    }
+  }
+
+  function deleteProduit() {
+    let formfields = fields;
+        formfields.status = "DELETED";
+        addItem(formfields);
+  }
+
   return (
-    <div className="form-dark form-overflow">
-      <form onSubmit={(e) => onCreatePost(e)}>
-        <h2 className="mb-5">Ajouter un produit</h2>
+    <div
+      className="form-dark form-overflow"
+      style={isModal ? {} : { paddingBottom: "150px" }}
+    >
+      <form
+        className={isModal ? "" : "form-dark-form"}
+        onSubmit={(e) => onCreatePost(e)}
+      >
+        <h2 className="mb-5">
+          {item !== undefined
+            ? "Mettre à jour " + item.name
+            : "Ajouter un produit"}
+        </h2>
         <div className="form-group my-3">
           <input
             value={fields.name}
@@ -117,6 +248,7 @@ const AddItemForm = () => {
             required
           />
         </div>
+        {showPromotion()}
         <div className="form-group my-3">
           <select
             className="form-control"
@@ -147,9 +279,12 @@ const AddItemForm = () => {
             required
           />
         </div>
+        {showStatus()}
         <div className="form-group my-3">
           <label htmlFor="image" className="btn btn-outline-light my-3">
-            {image !== undefined ? "Changer l'image" : "Selectionner l'image"}
+            {image !== undefined || item !== undefined
+              ? "Changer l'image"
+              : "Selectionner l'image"}
           </label>
           <input
             className="form-control"
@@ -160,20 +295,24 @@ const AddItemForm = () => {
               setImage(e.target.files[0]);
             }}
             accept="image/*"
-            required
+            required={item === undefined}
           />
         </div>
         {showImagePreview()}
+
         <hr />
         {showErrorMessage()}
-        <div className="form-group">
-          <button className="btn btn-outline-light my-3" type="submit">
-            Ajouter le produit
-          </button>
+        <div className="d-flex justify-content-between">
+          <div className="form-group">
+            <button className="btn btn-outline-light my-3" type="submit">
+              {item !== undefined
+                ? "Modifier le produit"
+                : "Ajouter le produit"}
+            </button>
+          </div>
+          {showDeleteProduit()}
         </div>
-        <p className="forgot" onClick={() => navigate(URL_HOME)}>
-          Voir la liste des produits
-        </p>
+        {showRedirection()}
       </form>
     </div>
   );

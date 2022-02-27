@@ -6,10 +6,19 @@ export function useFormFields(initialState) {
   return [
     fields,
     function (event) {
-      setValues({
-        ...fields,
-        [event.currentTarget.id]: event.target.value,
-      });
+      if (event.target.type === "checkbox") {
+        setValues({
+          ...fields,
+          [event.currentTarget.id]: event.target.checked,
+        });
+      }
+      else {
+        setValues({
+          ...fields,
+          [event.currentTarget.id]: event.target.value,
+        });
+      }
+      
     },
   ];
 }

@@ -29,7 +29,7 @@ public class InventoryController {
             produces = APPLICATION_JSON_AND_CHARSET_UTF8,
             consumes = { MULTI_PART_FROM_DATA })
     public ResponseEntity<Item> saveItem(@RequestPart(name = REQUEST_PART_ITEM) String itemJSON,
-                                                    @RequestPart(name = REQUEST_PART_IMAGE) MultipartFile multipartFile) {
+                                                    @RequestPart(name = REQUEST_PART_IMAGE, required = false) MultipartFile multipartFile) {
         return service.saveItem(itemJSON, multipartFile)
                 .map(_item -> ResponseEntity.status(HttpStatus.CREATED).body(_item))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());

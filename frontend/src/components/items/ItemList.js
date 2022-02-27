@@ -6,14 +6,22 @@ import CategoryDropdown from "./CategoryDropdown";
 import { GET_ITEMS_FROM_CATEGORY } from "../../utils/API";
 import { ERROR_NO_ITEM_FOUND_CATEGORY } from "../../utils/MESSAGE";
 import Pagination from "./Pagination";
+import ItemInfoAdminModal from "./modal/ItemInfoAdminModal";
+import Auth from "../../services/Auth";
 
 const ItemList = () => {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [items, setItems] = useState([]);
+  const [currentItem, setCurrentItem] = useState(undefined);
   const [currentPage, setCurrentPage] = useState(0);
   const [errorMessage, setErrorMessage] = useState([]);
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   useEffect(() => {
+    console.log("refresh")
     axios
       .get(GET_ITEMS_FROM_CATEGORY + category.value)
       .then((response) => {
@@ -32,17 +40,38 @@ const ItemList = () => {
         setErrorMessage(ERROR_NO_ITEM_FOUND_CATEGORY);
         setItems([]);
       });
-  }, [category.value]);
+  }, [category.value, show]);
 
   function checkIfCategoryIsEmpty() {
     if (items.length > 0) {
       return (
         <>
           {items[currentPage].items.map((item, i) => (
-            <Item key={i} item={item} />
+            <Item key={i} item={item} onClick={onItemClicked}/>
           ))}
         </>
       );
+    }
+  }
+
+  function onItemClicked(item) {
+    setCurrentItem(item);
+    handleShow();
+  }
+
+  function showModal() {
+    if (Auth.isAdministrator()) {
+      return (
+        <ItemInfoAdminModal
+        show={show}
+        handleClose={handleClose}
+        currentItem={currentItem}
+      />
+      )
+    } else {
+      return (
+        <></>
+      )
     }
   }
 
@@ -73,6 +102,7 @@ const ItemList = () => {
         </div>
         {showErrorMessage()}
       </div>
+      {showModal()}
     </section>
   );
 };
