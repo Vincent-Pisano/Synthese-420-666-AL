@@ -8,6 +8,7 @@ import { ERROR_NO_ITEM_FOUND_CATEGORY } from "../../utils/MESSAGE";
 import Pagination from "./Pagination";
 import ItemInfoAdminModal from "./modal/ItemInfoAdminModal";
 import Auth from "../../services/Auth";
+import ItemInfoClientModal from "./modal/ItemInfoClientModal";
 
 const ItemList = () => {
   const [category, setCategory] = useState(CATEGORIES[0]);
@@ -71,7 +72,11 @@ const ItemList = () => {
       )
     } else {
       return (
-        <></>
+        <ItemInfoClientModal
+        show={show}
+        handleClose={handleClose}
+        currentItem={currentItem}
+      />
       )
     }
   }

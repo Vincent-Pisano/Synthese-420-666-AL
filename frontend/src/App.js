@@ -5,6 +5,7 @@ import Navbar from "./components/navbar/Navbar";
 import { ProtectedRoute } from "./services/ProtectedRoute";
 import Home from "./components/Home";
 import Footer from "./components/footer/Footer";
+import CartContextProvider from "./contexts/CartContext";
 
 function App() {
   return (
@@ -17,24 +18,30 @@ function App() {
           })`,
         }}
       >
-        <Navbar />
-        <div className="main">
-          <Routes>
-            {ROUTES.map((route, i) => (
-              <Route
-                key={i}
-                exact
-                path={route.link}
-                element={<ProtectedRoute />}
-              >
-                <Route exact path={route.link} element={<route.component />} />
-              </Route>
-            ))}
-            <Route exact path="*" element={<Home />} />
-          </Routes>
-        </div>
+        <CartContextProvider>
+          <Navbar />
+          <div className="main">
+            <Routes>
+              {ROUTES.map((route, i) => (
+                <Route
+                  key={i}
+                  exact
+                  path={route.link}
+                  element={<ProtectedRoute />}
+                >
+                  <Route
+                    exact
+                    path={route.link}
+                    element={<route.component />}
+                  />
+                </Route>
+              ))}
+              <Route exact path="*" element={<Home />} />
+            </Routes>
+          </div>
 
-        <Footer />
+          <Footer />
+        </CartContextProvider>
       </div>
     </Router>
   );

@@ -1,13 +1,20 @@
-import { React } from "react";
+import { React, useContext, useState } from "react";
 import Auth from "../../services/Auth";
 import { useNavigate } from "react-router";
 import { URL_HOME, URL_LOGIN, URL_SUBSCRIBE } from "../../utils/URL";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { OPTIONS_ADMIN } from "../../utils/PATH";
+import { CartContext } from "../../contexts/CartContext";
+import CartInfoModal from "./modal/CartInfoModal";
 
 function Navbar() {
   let navigate = useNavigate();
+  const [ cart, setCart ] = useContext(CartContext)
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   function checkAuthentication() {
     return Auth.isAuthenticated() ? (
@@ -62,12 +69,29 @@ function Navbar() {
       );
     } else {
       return (
-        <button className="mx-2 btn btn-outline-dark" type="submit">
+        <button className="mx-2 btn btn-outline-dark" onClick={() => handleShow()}>
           <i className="bi-cart-fill me-1"></i>
           Cart
-          <span className="badge bg-dark text-white ms-1 rounded-pill">0</span>
+          <span className="badge bg-dark text-white ms-1 rounded-pill">{cart.orderItems.length}</span>
         </button>
       );
+    }
+  }
+
+  function showModal() {
+    if (Auth.isAuthenticated() && !Auth.isAdministrator()) {
+      return (
+        <CartInfoModal
+        show={show}
+        handleClose={handleClose}
+        cart={cart}
+        setCart={setCart}
+      />
+      )
+    } else {
+      return (
+        <></>
+      )
     }
   }
 
@@ -115,6 +139,7 @@ function Navbar() {
           </div>
         </div>
       </div>
+      {showModal()}
     </nav>
   );
 }
