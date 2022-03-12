@@ -15,7 +15,8 @@ public class Utils {
 
     public static class InventoryControllerUrl {
         public final static String URL_ADD_ITEM = "/add/item";
-        public final static String URL_GET_ITEMS_FROM_CATEGORY = "/get/items/category/";
+        public final static String URL_GET_ALL_ITEMS_FROM_CATEGORY = "/get/all/items/category/";
+        public final static String URL_GET_VISIBLE_ITEMS_FROM_CATEGORY = "/get/visible/items/category/";
         public final static String URL_GET_IMAGE = "/get/image/";
     }
 

@@ -3,7 +3,7 @@ import { React, useState } from "react";
 import { useNavigate } from "react-router";
 import { URL_HOME, URL_SUBSCRIBE } from "../../utils/URL";
 import { useFormFields } from "../../services/FormFields";
-import { ERROR_ACCOUNT_NOT_FOUND } from "../../utils/MESSAGE";
+import { ERROR_ACCOUNT_NOT_FOUND, ERROR_SERVER_NOT_FOUND } from "../../utils/MESSAGE";
 import { LOGIN_ADMIN, LOGIN_CLIENT } from "../../utils/API";
 import { ADMIN_EMAIL } from "../../utils/SECURITY"
 import auth from "../../services/Auth";
@@ -21,29 +21,22 @@ const Login = () => {
   function onCreatePost(e) {
     e.preventDefault();
 
-    if (fields.email === ADMIN_EMAIL) {
+    var url = fields.email === ADMIN_EMAIL ? LOGIN_ADMIN : LOGIN_CLIENT
+
       axios
-      .get(LOGIN_ADMIN + fields.email + "/" + fields.password)
+      .get(url + fields.email + "/" + fields.password)
       .then((response) => {
         auth.login(() => {
           navigate(URL_HOME);
         }, response.data);
       })
       .catch((error) => {
-        setErrorMessage(ERROR_ACCOUNT_NOT_FOUND);
+        if (error.response && error.response.status === 409) {
+          setErrorMessage(ERROR_ACCOUNT_NOT_FOUND);
+        } else if (error.request) {
+          setErrorMessage(ERROR_SERVER_NOT_FOUND);
+        }
       });
-    } else {
-      axios
-      .get(LOGIN_CLIENT + fields.email + "/" + fields.password)
-      .then((response) => {
-        auth.login(() => {
-          navigate(URL_HOME);
-        }, response.data);
-      })
-      .catch((error) => {
-        setErrorMessage(ERROR_ACCOUNT_NOT_FOUND);
-      });
-    }
   }
 
   function showErrorMessage() {

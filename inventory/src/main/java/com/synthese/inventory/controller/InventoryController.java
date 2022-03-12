@@ -35,9 +35,16 @@ public class InventoryController {
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
-    @GetMapping(URL_GET_ITEMS_FROM_CATEGORY)
-    public ResponseEntity<List<Item>> getItemsFromCategory(@PathVariable Item.ItemCategory category) {
-        return service.getItemsFromCategory(category)
+    @GetMapping(URL_GET_ALL_ITEMS_FROM_CATEGORY)
+    public ResponseEntity<List<Item>> getAllItemsFromCategory(@PathVariable Item.ItemCategory category) {
+        return service.getAllItemsFromCategory(category)
+                .map(_items -> ResponseEntity.status(HttpStatus.ACCEPTED).body(_items))
+                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
+
+    @GetMapping(URL_GET_VISIBLE_ITEMS_FROM_CATEGORY)
+    public ResponseEntity<List<Item>> getVisibleItemsFromCategory(@PathVariable Item.ItemCategory category) {
+        return service.getVisibleItemsFromCategory(category)
                 .map(_items -> ResponseEntity.status(HttpStatus.ACCEPTED).body(_items))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }

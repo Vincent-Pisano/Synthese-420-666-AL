@@ -72,11 +72,15 @@ public class InventoryService {
         return image;
     }
 
-    //pour admin
-    // quand arrivé à client, ne pas oublié de supprimer les items HIDDEN
-    public Optional<List<Item>> getItemsFromCategory(Item.ItemCategory category) {
+    public Optional<List<Item>> getAllItemsFromCategory(Item.ItemCategory category) {
         List<Item> items =
                 itemRepository.findAllByCategoryOrderByCreationDateDesc(category);
+        return items.isEmpty() ? Optional.empty() : Optional.of(items);
+    }
+
+    public Optional<List<Item>> getVisibleItemsFromCategory(Item.ItemCategory category) {
+        List<Item> items =
+                itemRepository.findAllVisibleByCategoryOrderByCreationDateDesc(category);
         return items.isEmpty() ? Optional.empty() : Optional.of(items);
     }
 

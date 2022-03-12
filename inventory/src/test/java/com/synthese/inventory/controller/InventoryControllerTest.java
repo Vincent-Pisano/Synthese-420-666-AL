@@ -79,16 +79,38 @@ class InventoryControllerTest {
 
     @Test
     //@Disabled
-    public void testGetItemsFromCategory() throws Exception {
+    public void testGetAllItemsFromCategory() throws Exception {
         //Arrange
         expectedItems = getListOfItems();
 
-        when(service.getItemsFromCategory(CATEGORY_OTHER))
+        when(service.getAllItemsFromCategory(CATEGORY_OTHER))
                 .thenReturn(Optional.ofNullable(expectedItems));
 
         //Act
         MvcResult result = mockMvc.perform(get(
-                URL_GET_ITEMS_FROM_CATEGORY + CATEGORY_OTHER.name())
+                URL_GET_ALL_ITEMS_FROM_CATEGORY + CATEGORY_OTHER.name())
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+
+        //Assert
+        MockHttpServletResponse response = result.getResponse();
+        var actualItems = new ObjectMapper().readValue(response.getContentAsString(), List.class);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
+        assertThat(actualItems).isNotNull();
+    }
+
+    @Test
+    //@Disabled
+    public void testGetVisibleItemsFromCategory() throws Exception {
+        //Arrange
+        expectedItems = getListOfItems();
+
+        when(service.getVisibleItemsFromCategory(CATEGORY_OTHER))
+                .thenReturn(Optional.ofNullable(expectedItems));
+
+        //Act
+        MvcResult result = mockMvc.perform(get(
+                URL_GET_VISIBLE_ITEMS_FROM_CATEGORY + CATEGORY_OTHER.name())
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         //Assert

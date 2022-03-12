@@ -66,7 +66,7 @@ class InventoryServiceTest {
 
     @Test
     //@Disabled
-    public void getItemsFromCategory() throws IOException {
+    public void getAllItemsFromCategory() throws IOException {
         //Arrange
         expectedItems = getListOfItems();
         when(itemRepository.findAllByCategoryOrderByCreationDateDesc(CATEGORY_OTHER))
@@ -74,7 +74,26 @@ class InventoryServiceTest {
 
         //Act
         final Optional<List<Item>> optionalItems =
-                service.getItemsFromCategory(CATEGORY_OTHER);
+                service.getAllItemsFromCategory(CATEGORY_OTHER);
+
+        //Assert
+        List<Item> actualItems = optionalItems.orElse(null);
+
+        assertThat(optionalItems.isPresent()).isTrue();
+        assertThat(actualItems.size()).isEqualTo(expectedItems.size());
+    }
+
+    @Test
+    //@Disabled
+    public void getVisibleItemsFromCategory() throws IOException {
+        //Arrange
+        expectedItems = getListOfItems();
+        when(itemRepository.findAllVisibleByCategoryOrderByCreationDateDesc(CATEGORY_OTHER))
+                .thenReturn(expectedItems);
+
+        //Act
+        final Optional<List<Item>> optionalItems =
+                service.getVisibleItemsFromCategory(CATEGORY_OTHER);
 
         //Assert
         List<Item> actualItems = optionalItems.orElse(null);

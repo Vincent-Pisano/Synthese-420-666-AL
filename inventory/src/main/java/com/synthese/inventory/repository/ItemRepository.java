@@ -10,4 +10,7 @@ public interface ItemRepository extends MongoRepository<Item, String> {
 
     @Query(value="{ 'category' : ?0, 'status': { $in: ['HIDDEN','VISIBLE']}}", fields="{ 'image' : 0}", sort = "{'creationDate': -1}")
     List<Item> findAllByCategoryOrderByCreationDateDesc(Item.ItemCategory category);
+
+    @Query(value="{ 'category' : ?0, 'status': { $in: ['VISIBLE']}}", fields="{ 'image' : 0}", sort = "{'creationDate': -1}")
+    List<Item> findAllVisibleByCategoryOrderByCreationDateDesc(Item.ItemCategory category);
 }

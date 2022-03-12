@@ -7,6 +7,7 @@ import {
   CONFIRM_ADD_ITEM,
   CONFIRM_UPDATE_ITEM,
   ERROR_INVALID_ITEM,
+  ERROR_SERVER_NOT_FOUND
 } from "../../utils/MESSAGE";
 import { CATEGORIES, ITEM_STATUS } from "../../utils/SECURITY";
 import { URL_HOME } from "../../utils/URL";
@@ -113,7 +114,11 @@ const AddItemForm = ({ isModal, item, handleClose }) => {
         }
       })
       .catch((error) => {
-        setErrorMessage(ERROR_INVALID_ITEM);
+        if (error.response && error.response.status === 409) {
+          setErrorMessage(ERROR_INVALID_ITEM);
+        } else if (error.request) {
+          setErrorMessage(ERROR_SERVER_NOT_FOUND);
+        }
       });
   }
 

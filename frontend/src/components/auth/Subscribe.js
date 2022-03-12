@@ -3,7 +3,7 @@ import { React, useState } from "react";
 import { useNavigate } from "react-router";
 import { URL_HOME, URL_LOGIN } from "../../utils/URL";
 import { useFormFields } from "../../services/FormFields";
-import { ERROR_EMAIL_ALREADY_EXISTS } from "../../utils/MESSAGE";
+import { ERROR_EMAIL_ALREADY_EXISTS, ERROR_SERVER_NOT_FOUND } from "../../utils/MESSAGE";
 import { SUBSCRIBE_CLIENT } from "../../utils/API";
 import auth from "../../services/Auth";
 
@@ -30,7 +30,11 @@ const Subscribe = () => {
         }, response.data);
       })
       .catch((error) => {
-        setErrorMessage(ERROR_EMAIL_ALREADY_EXISTS);
+        if (error.response && error.response.status === 409) {
+          setErrorMessage(ERROR_EMAIL_ALREADY_EXISTS);
+        } else if (error.request) {
+          setErrorMessage(ERROR_SERVER_NOT_FOUND);
+        }
       });
   }
 

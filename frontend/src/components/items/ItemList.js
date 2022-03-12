@@ -3,7 +3,7 @@ import Item from "./Item";
 import axios from "axios";
 import { CATEGORIES } from "../../utils/SECURITY";
 import CategoryDropdown from "./CategoryDropdown";
-import { GET_ITEMS_FROM_CATEGORY } from "../../utils/API";
+import { GET_ALL_ITEMS_FROM_CATEGORY, GET_VISIBLE_ITEMS_FROM_CATEGORY } from "../../utils/API";
 import { ERROR_NO_ITEM_FOUND_CATEGORY } from "../../utils/MESSAGE";
 import Pagination from "./Pagination";
 import ItemInfoAdminModal from "./modal/ItemInfoAdminModal";
@@ -19,11 +19,12 @@ const ItemList = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
+  var url = Auth.isAdministrator() ? GET_ALL_ITEMS_FROM_CATEGORY : GET_VISIBLE_ITEMS_FROM_CATEGORY
 
   useEffect(() => {
-    console.log("refresh")
     axios
-      .get(GET_ITEMS_FROM_CATEGORY + category.value)
+      .get(url + category.value)
       .then((response) => {
         var allItems = response.data;
         var itemsPaginated = [];
@@ -40,7 +41,7 @@ const ItemList = () => {
         setErrorMessage(ERROR_NO_ITEM_FOUND_CATEGORY);
         setItems([]);
       });
-  }, [category.value, show]);
+  }, [category.value, show, url]);
 
   function checkIfCategoryIsEmpty() {
     if (items.length > 0) {
