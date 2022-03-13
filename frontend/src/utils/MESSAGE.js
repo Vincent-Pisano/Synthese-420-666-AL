@@ -7,3 +7,4 @@ export const ERROR_INVALID_ITEM = "Une erreur est survenue durant l'ajout du pro
 export const ERROR_NO_ITEM_FOUND_CATEGORY = "Aucun produit n'a été trouvé dans cette catégorie..."
 export const ERROR_QUANTITY_INVALID = "Choisissez une quantité valide..."
 export const CONFIRM_ADD_ITEM_TO_CART = "Votre commande à été mise à jour"
+export const ERROR_UPDATE_CART = "La mise à jour du panier à été compromise..."

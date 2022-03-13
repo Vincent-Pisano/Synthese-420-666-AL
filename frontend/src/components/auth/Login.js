@@ -1,5 +1,5 @@
 import axios from "axios";
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { URL_HOME, URL_SUBSCRIBE } from "../../utils/URL";
 import { useFormFields } from "../../services/FormFields";
@@ -7,12 +7,14 @@ import { ERROR_ACCOUNT_NOT_FOUND, ERROR_SERVER_NOT_FOUND } from "../../utils/MES
 import { LOGIN_ADMIN, LOGIN_CLIENT } from "../../utils/API";
 import { ADMIN_EMAIL } from "../../utils/SECURITY"
 import auth from "../../services/Auth";
+import { CartContext } from "../../contexts/CartContext";
 
 const Login = () => {
   let navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
-
+  // eslint-disable-next-line no-unused-vars
+  const [ cart, setCart ] = useContext(CartContext)
   const [fields, handleFieldChange] = useFormFields({
     email: "",
     password: "",
@@ -20,12 +22,15 @@ const Login = () => {
 
   function onCreatePost(e) {
     e.preventDefault();
-
     var url = fields.email === ADMIN_EMAIL ? LOGIN_ADMIN : LOGIN_CLIENT
-
       axios
       .get(url + fields.email + "/" + fields.password)
       .then((response) => {
+        setCart({
+          temp: response.data,
+          orderItems: [],
+          totalPrice:0
+        })
         auth.login(() => {
           navigate(URL_HOME);
         }, response.data);

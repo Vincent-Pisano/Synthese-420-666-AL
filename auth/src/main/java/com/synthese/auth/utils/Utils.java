@@ -9,5 +9,4 @@ public class Utils {
         public final static String URL_LOGIN_CLIENT = "/login/client/{email}/{password}";
         public final static String URL_LOGIN_ADMIN = "/login/admin/{email}/{password}";
     }
-
 }

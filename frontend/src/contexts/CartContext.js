@@ -1,18 +1,47 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
+import { GET_WAITING_ORDER, SAVE_ORDER } from "../utils/API";
+import Auth from "../services/Auth";
 
 export const CartContext = createContext();
 
 const CartContextProvider = (props) => {
-  //aller chercher la commande en cours d'un client
-
   const [cart, setCart] = useState({
-    client: undefined,
-    status: "",
+
     orderItems: [],
-    totalPrice:0
+    totalPrice: 0,
   });
+
+  useEffect(() => {
+    let idClient =
+      Auth.user !== undefined && Auth.user !== null
+        ? Auth.user.id
+        : "undefined";
+    axios
+      .get(GET_WAITING_ORDER + idClient)
+      .then((response) => {
+        console.log(response.data)
+        setCart(response.data);
+      })
+      .catch((error) => {
+        let fields = {
+          client: Auth.user,
+          orderItems: cart.orderItems,
+          totalPrice: cart,
+        }
+        axios
+          .post(SAVE_ORDER, fields)
+          .then((response) => {
+            setCart(response.data);
+          })
+          .catch((error) => {
+            console.log("Couldn't create the cart's order");
+          });
+      });
+  }, [cart.temp]);
+
   return (
-    <CartContext.Provider value={[ cart, setCart ]}>
+    <CartContext.Provider value={[cart, setCart]}>
       {props.children}
     </CartContext.Provider>
   );

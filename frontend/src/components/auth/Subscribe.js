@@ -1,17 +1,19 @@
 import axios from "axios";
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { URL_HOME, URL_LOGIN } from "../../utils/URL";
 import { useFormFields } from "../../services/FormFields";
 import { ERROR_EMAIL_ALREADY_EXISTS, ERROR_SERVER_NOT_FOUND } from "../../utils/MESSAGE";
 import { SUBSCRIBE_CLIENT } from "../../utils/API";
 import auth from "../../services/Auth";
+import { CartContext } from "../../contexts/CartContext";
 
 const Subscribe = () => {
   let navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
-
+  // eslint-disable-next-line no-unused-vars
+  const [ cart, setCart ] = useContext(CartContext)
   const [fields, handleFieldChange] = useFormFields({
     firstName: "",
     lastName: "",
@@ -25,6 +27,11 @@ const Subscribe = () => {
     axios
       .post(SUBSCRIBE_CLIENT, fields)
       .then((response) => {
+        setCart({
+          temp: response.data,
+          orderItems: [],
+          totalPrice:0
+        })
         auth.login(() => {
           navigate(URL_HOME);
         }, response.data);

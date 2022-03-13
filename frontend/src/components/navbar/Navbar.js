@@ -22,7 +22,7 @@ function Navbar() {
         {checkIfAdmin()}
         <button
           className="mx-2 btn btn-outline-danger text-right"
-          onClick={() => Auth.logout(navigate(URL_LOGIN))}
+          onClick={() => Auth.logout(() => navigate(URL_LOGIN))}
         >
           <i className="bi-cart-fill me-1"></i>
           Déconnexion
@@ -72,7 +72,7 @@ function Navbar() {
         <button className="mx-2 btn btn-outline-dark" onClick={() => handleShow()}>
           <i className="bi-cart-fill me-1"></i>
           Cart
-          <span className="badge bg-dark text-white ms-1 rounded-pill">{cart.orderItems.length}</span>
+          <span className="badge bg-dark text-white ms-1 rounded-pill">{cart.orderItems !== undefined ? cart.orderItems.length : 0}</span>
         </button>
       );
     }

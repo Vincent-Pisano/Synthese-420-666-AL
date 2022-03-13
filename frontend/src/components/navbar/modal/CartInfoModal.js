@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { GET_ITEM_IMAGE } from "../../../utils/API";
+import { GET_ITEM_IMAGE, SAVE_ORDER } from "../../../utils/API";
+import axios from "axios";
 
 const CartInfoModal = ({ show, handleClose, cart, setCart }) => {
 
@@ -14,20 +15,29 @@ const CartInfoModal = ({ show, handleClose, cart, setCart }) => {
   }
 
   function updateOrder(event) {
-    let newOrderItem = event.target.id === "update"
+    let newOrderItems = event.target.id === "update"
     ? updateQuantityOrderItem(event)
     : cart.orderItems.filter(
         (orderItem) =>
-          orderItem.item.name !== event.target.getAttribute("name")
+          orderItem.item.name !== event.currentTarget.getAttribute("name")
       );
-    setCart((oldCart) => ({
-      client: oldCart.client,
-      status: oldCart.status,
-      orderItems: newOrderItem,
-      totalPrice: newOrderItem
+    let fields = {
+      id: cart.id,
+      client: cart.client,
+      status: cart.status,
+      orderItems: newOrderItems,
+      totalPrice: newOrderItems
         .map((orderItem) => orderItem.item.price * orderItem.quantity)
         .reduce((prev, curr) => prev + curr, 0),
-    }));
+      creationDate: cart.creationDate,
+      isDisabled: cart.isDisabled,
+    };
+    axios
+      .post(SAVE_ORDER, fields)
+      .then((response) => {
+        setCart(response.data);
+      })
+      .catch((error) => {});
   }
 
   function sum() {
@@ -86,7 +96,7 @@ const CartInfoModal = ({ show, handleClose, cart, setCart }) => {
                                 {orderItem.item.name}
                               </td>
                               <td className="align-middle">
-                                {orderItem.item.price}$
+                                {orderItem.item.price.toFixed(2)}$
                               </td>
                               <td className="align-middle qty">
                                 <input
@@ -102,7 +112,7 @@ const CartInfoModal = ({ show, handleClose, cart, setCart }) => {
                                 />
                               </td>
                               <td className="align-middle">
-                                {orderItem.item.price * orderItem.quantity}$
+                                {(orderItem.item.price * orderItem.quantity).toFixed(2)}$
                               </td>
                               <td className="align-middle">
                                 <button
