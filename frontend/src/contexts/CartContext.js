@@ -7,7 +7,6 @@ export const CartContext = createContext();
 
 const CartContextProvider = (props) => {
   const [cart, setCart] = useState({
-
     orderItems: [],
     totalPrice: 0,
   });
@@ -20,7 +19,6 @@ const CartContextProvider = (props) => {
     axios
       .get(GET_WAITING_ORDER + idClient)
       .then((response) => {
-        console.log(response.data)
         setCart(response.data);
       })
       .catch((error) => {
@@ -38,6 +36,7 @@ const CartContextProvider = (props) => {
             console.log("Couldn't create the cart's order");
           });
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart.temp]);
 
   return (

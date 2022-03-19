@@ -2,6 +2,7 @@ package com.synthese.inventory.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synthese.inventory.model.Item;
+import com.synthese.inventory.model.OrderItem;
 import com.synthese.inventory.service.InventoryService;
 import org.bson.types.Binary;
 import org.junit.jupiter.api.Disabled;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static com.synthese.inventory.utils.Utils.*;
 import static com.synthese.inventory.utils.Utils.InventoryControllerUrl.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest(InventoryController.class)
 class InventoryControllerTest {
@@ -45,6 +48,7 @@ class InventoryControllerTest {
     private List<Item> expectedItems;
     private Item givenItem;
     private Binary expectedImage;
+    private List<OrderItem> givenOrderItems;
 
     @Test
     //@Disabled
@@ -75,6 +79,25 @@ class InventoryControllerTest {
         MockHttpServletResponse response = result.getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    //@Disabled
+    public  void testUpdateItemsQuantity() throws Exception {
+        //Arrange
+        givenOrderItems = getListOfOrderItems();
+
+        when(service.updateItemsQuantity(givenOrderItems)).thenReturn(Optional.empty());
+
+        //Act
+        MvcResult result = mockMvc.perform(post(URL_UPDATE_ITEMS_QUANTITY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(givenOrderItems))).andReturn();
+
+        //Assert
+        MockHttpServletResponse response = result.getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
     }
 
     @Test

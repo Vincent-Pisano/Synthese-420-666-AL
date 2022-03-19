@@ -3,6 +3,7 @@ package com.synthese.inventory.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synthese.inventory.model.Item;
+import com.synthese.inventory.model.OrderItem;
 import com.synthese.inventory.repository.ItemRepository;
 import org.bson.types.Binary;
 import org.junit.jupiter.api.Disabled;
@@ -38,6 +39,7 @@ class InventoryServiceTest {
     private List<Item> expectedItems;
     private Item givenItem;
     private Binary expectedImage;
+    private List<OrderItem> givenOrderItems;
 
     @Test
     //@Disabled
@@ -62,6 +64,23 @@ class InventoryServiceTest {
         assertThat(optionalItem.isPresent()).isTrue();
         assertThat(actualItem.getImage()).isNotNull();
         assertThat(actualItem.getId()).isEqualTo(expectedItem.getId());
+    }
+
+    @Test
+    //@Disabled
+    public void testUpdateItemsQuantity() throws Exception {
+        //Arrange
+        givenOrderItems = getListOfOrderItems();
+        expectedItem = getItemWithID();
+
+        when(itemRepository.save(any())).thenReturn(expectedItem);
+        when(itemRepository.findByIdWithoutImage(any())).thenReturn(Optional.ofNullable(expectedItem));
+        when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(expectedItem));
+        //Act
+        Optional<List<Item>> optionalItem = service.updateItemsQuantity(givenOrderItems);
+
+        //Assert
+        assertThat(optionalItem.isEmpty()).isTrue();
     }
 
     @Test

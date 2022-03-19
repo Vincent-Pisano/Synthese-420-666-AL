@@ -1,6 +1,7 @@
 package com.synthese.inventory.utils;
 
 import com.synthese.inventory.model.Item;
+import com.synthese.inventory.model.OrderItem;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 
@@ -15,6 +16,7 @@ public class Utils {
 
     public static class InventoryControllerUrl {
         public final static String URL_ADD_ITEM = "/add/item";
+        public final static String URL_UPDATE_ITEMS_QUANTITY = "/update/items/quantity";
         public final static String URL_GET_ALL_ITEMS_FROM_CATEGORY = "/get/all/items/category/";
         public final static String URL_GET_VISIBLE_ITEMS_FROM_CATEGORY = "/get/visible/items/category/";
         public final static String URL_GET_IMAGE = "/get/image/";
@@ -24,6 +26,21 @@ public class Utils {
     public static final Item.ItemCategory CATEGORY_OTHER = Item.ItemCategory.OTHER;
     public final static String IMAGE_FILEPATH =
             System.getProperty("user.dir") + "\\src\\test\\resources\\assets\\image.jpg";
+
+    public static List<OrderItem> getListOfOrderItems() throws IOException {
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(getOrderItemWithID());
+        orderItems.add(getOrderItemWithID());
+        orderItems.forEach(orderItem -> orderItem.getItem().setImage(null));
+        return orderItems;
+    }
+
+    public static OrderItem getOrderItemWithID() throws IOException {
+        return OrderItem.builder()
+                .item(getItemWithID())
+                .quantity(2)
+                .build();
+    }
 
     public static Item getItemWithID() throws IOException {
         return getItemWithoutID()

@@ -17,6 +17,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.when;
 import static com.synthese.order.utils.Utils.*;
 import static com.synthese.order.utils.Utils.OrderControllerUrl.*;
@@ -57,10 +59,29 @@ class OrderControllerTest {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
-        var actualClient = mapper.readValue(response.getContentAsString(), Order.class);
+        var actualOrder = mapper.readValue(response.getContentAsString(), Order.class);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(actualClient).isEqualTo(expectedOrder);
+        assertThat(actualOrder).isEqualTo(expectedOrder);
+    }
+
+    @Test
+    //@Disabled
+    public void testConfirmOrder() throws Exception {
+        //Arrange
+        givenOrder = getOrderWithID();
+
+        when(service.confirmOrder(givenOrder)).thenReturn(Optional.empty());
+
+        //Act
+        MvcResult result = mockMvc.perform(post(URL_CONFIRM_ORDER)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(givenOrder))).andReturn();
+
+        //Assert
+        MockHttpServletResponse response = result.getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
     }
 
     @Test

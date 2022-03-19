@@ -1,4 +1,4 @@
-package com.synthese.order.model;
+package com.synthese.inventory.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,4 @@ public class OrderItem {
     private Item item;
     private Integer quantity;
 
-    public float getTotalPrice() {
-        return item.getPrice() * quantity;
-    }
 }

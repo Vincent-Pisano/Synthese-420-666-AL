@@ -1,6 +1,7 @@
 package com.synthese.inventory.controller;
 
 import com.synthese.inventory.model.Item;
+import com.synthese.inventory.model.OrderItem;
 import com.synthese.inventory.service.InventoryService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,13 @@ public class InventoryController {
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
+    @PostMapping(URL_UPDATE_ITEMS_QUANTITY)
+    public ResponseEntity<List<Item>> updateItemsQuantity(@RequestBody List<OrderItem> orderItems){
+        return service.updateItemsQuantity(orderItems)
+                .map(_items -> ResponseEntity.status(HttpStatus.CONFLICT).body(_items))
+                .orElse(ResponseEntity.status(HttpStatus.ACCEPTED).build());
+    }
+
     @GetMapping(URL_GET_ALL_ITEMS_FROM_CATEGORY)
     public ResponseEntity<List<Item>> getAllItemsFromCategory(@PathVariable Item.ItemCategory category) {
         return service.getAllItemsFromCategory(category)
@@ -60,5 +68,7 @@ public class InventoryController {
                         ))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
+
+
 
 }

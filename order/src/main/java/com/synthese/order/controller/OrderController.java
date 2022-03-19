@@ -1,10 +1,14 @@
 package com.synthese.order.controller;
 
+import com.synthese.order.model.Item;
 import com.synthese.order.model.Order;
 import com.synthese.order.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.synthese.order.utils.Utils.CROSS_ORIGIN_ALLOWED;
 import static com.synthese.order.utils.Utils.OrderControllerUrl.*;
@@ -24,6 +28,13 @@ public class OrderController {
         return service.saveOrder(order)
                 .map(_order -> ResponseEntity.status(HttpStatus.CREATED).body(_order))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
+
+    @PostMapping(URL_CONFIRM_ORDER)
+    public ResponseEntity<List<Item>> confirmOrder(@RequestBody Order order) {
+        return service.confirmOrder(order)
+                .map(_items -> ResponseEntity.status(HttpStatus.CONFLICT).body(_items))
+                .orElse(ResponseEntity.status(HttpStatus.ACCEPTED).build());
     }
 
     @GetMapping(URL_GET_WAITING_ORDER)

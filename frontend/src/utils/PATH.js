@@ -6,18 +6,16 @@ import {
     URL_HOME,
     URL_LOGIN,
     URL_SUBSCRIBE,
+    URL_CONFIRM_ORDER,
     URL_ADD_ITEM
 } from "./URL.js"
 import Auth from '../services/Auth';
+import ConfirmOrder from '../components/confirmOrder/ConfirmOrder';
 
 export const OPTIONS_ADMIN = [
     {
         link: URL_ADD_ITEM,
         title: "Ajouter un produit"
-    },
-    {
-        link: URL_SUBSCRIBE,
-        title: "temp 2"
     }
 ]
 
@@ -35,7 +33,12 @@ export const ROUTES = [
     {
         link : URL_SUBSCRIBE,
         component: Subscribe,
-        accessValid: true
+        accessValid: Auth.isClient()
+    },
+    {
+        link : URL_CONFIRM_ORDER,
+        component: ConfirmOrder,
+        accessValid: Auth.isClient()
     },
     {
         link : URL_ADD_ITEM,

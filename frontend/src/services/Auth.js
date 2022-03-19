@@ -37,6 +37,10 @@ class Auth {
     isAdministrator() {
       return this.authenticated ? this.user.email === ADMIN_EMAIL : false;
     }
+
+    isClient() {
+      return this.authenticated ? this.user.email !== ADMIN_EMAIL : false;
+    }
 }
 
 export default new Auth();

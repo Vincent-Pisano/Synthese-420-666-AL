@@ -2,18 +2,22 @@ package com.synthese.inventory.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synthese.inventory.model.Item;
+import com.synthese.inventory.model.OrderItem;
 import com.synthese.inventory.repository.ItemRepository;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InventoryService {
@@ -37,7 +41,6 @@ public class InventoryService {
         } catch (DuplicateKeyException exception) {
             logger.error("A duplicated key was found in InventoryService.saveItem : " + exception.getMessage());
         }
-
         return optionalItem;
     }
 
@@ -70,6 +73,37 @@ public class InventoryService {
                     "getItem in InventoryService.getItem : " + e.getMessage());
         }
         return image;
+    }
+
+
+    public Optional<List<Item>> updateItemsQuantity(List<OrderItem> orderItems) {
+        Optional<List<Item>> optionalItems = Optional.ofNullable(getItemsWithoutValidQuantity(orderItems));
+        if (optionalItems.isEmpty()) {
+            updateQuantityOfItems(orderItems);
+        }
+        return optionalItems;
+    }
+
+    private List<Item> getItemsWithoutValidQuantity(List<OrderItem> orderItems) {
+        return orderItems.stream()
+            .map(_orderItem -> {
+                Item item = _orderItem.getItem();
+                return itemRepository.findByIdWithoutImage(item.getId())
+                        .filter(_item -> _item.getQuantity() - _orderItem.getQuantity() < 0).orElse(null);
+            })
+            .filter(Objects::nonNull)
+            .collect(Collectors.collectingAndThen(Collectors.toList(), items -> !items.isEmpty() ? items:null));
+    }
+
+    private void updateQuantityOfItems(List<OrderItem> orderItems) {
+        orderItems.forEach(_orderItem -> {
+            Item item = _orderItem.getItem();
+            itemRepository.findById(item.getId())
+                .map(_item -> {
+                    _item.setQuantity(_item.getQuantity() - _orderItem.getQuantity());
+                    return itemRepository.save(_item);
+                });
+        });
     }
 
     public Optional<List<Item>> getAllItemsFromCategory(Item.ItemCategory category) {

@@ -30,3 +30,21 @@ export const ITEM_STATUS = [
         name:"visible"
     }
 ]
+
+export const PROVINCES = [
+    {
+        name:"Québec"
+    },
+    {
+        name:"Ontario"
+    },
+    {
+        name:"Alberta"
+    },
+    {
+        name:"Colombie Britannique"
+    },
+    {
+        name:"Manitoba"
+    }
+]

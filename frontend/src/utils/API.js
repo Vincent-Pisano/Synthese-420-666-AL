@@ -17,4 +17,5 @@ export const GET_ITEM_IMAGE = URL_INVENTORY + "get/image/"
 
 //ORDER
 export const SAVE_ORDER = URL_ORDER + "save/order"
+export const API_CONFIRM_ORDER = URL_ORDER + "confirm/order"
 export const GET_WAITING_ORDER = URL_ORDER + "get/order/waiting/"

@@ -6,7 +6,9 @@ import lombok.Data;
 public class Address {
 
     private String address;
+    private String city;
+    private String province;
     private String postalCode;
-    private String apartmentNumber;
+    private String apartmentCode;
 
 }

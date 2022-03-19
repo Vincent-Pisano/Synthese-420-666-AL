@@ -31,6 +31,8 @@ public class Order extends Entity{
     @Builder.Default
     private OrderStatus status = OrderStatus.WAITING;
 
+    private Address address;
+
     public Float getTotalPrice() {
         return this.orderItems.stream()
                 .map(OrderItem::getTotalPrice)
