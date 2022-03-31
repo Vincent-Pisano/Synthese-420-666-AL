@@ -20,9 +20,16 @@ public class Utils {
         public final static String URL_SAVE_ORDER = "/save/order";
         public final static String URL_CONFIRM_ORDER = "/confirm/order";
         public final static String URL_GET_WAITING_ORDER = "/get/order/waiting/";
+        public final static String URL_GET_ALL_ORDER_OF_CLIENT = "/get/all/orders/";
     }
 
     public static final String ID = "62082f071f32b05b7b0706f1";
+
+    public static List<Order> getOrderList() throws IOException {
+        List<Order> orders = new ArrayList<>();
+        orders.add(getOrderWithIDAndOrderItems());
+        return orders;
+    }
 
     public static Order getOrderWithIDAndOrderItems() throws IOException {
         return getOrderWithoutID()

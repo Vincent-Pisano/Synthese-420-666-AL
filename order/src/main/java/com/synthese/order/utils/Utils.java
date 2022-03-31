@@ -8,6 +8,7 @@ public class Utils {
         public final static String URL_SAVE_ORDER = "/save/order";
         public final static String URL_CONFIRM_ORDER = "/confirm/order";
         public final static String URL_GET_WAITING_ORDER = "/get/order/waiting/{idClient}";
+        public final static String URL_GET_ALL_ORDER_OF_CLIENT = "/get/all/orders/{idClient}";
     }
 
     public static class InventoryControllerUrl {

@@ -78,4 +78,13 @@ public class OrderService {
         }));
         return optionalOrder;
     }
+
+    public Optional<List<Order>> getAllOrdersOfClient(String idClient) {
+        List<Order> orders = orderRepository.findAllByClientIdAndIsDisabledFalse(idClient);
+        orders.forEach(order -> order.getOrderItems().forEach(orderItem -> {
+            Item item = orderItem.getItem();
+            item.setImage(null);
+        }));
+        return orders.isEmpty() ? Optional.empty() : Optional.of(orders);
+    }
 }

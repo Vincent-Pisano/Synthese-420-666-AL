@@ -31,6 +31,25 @@ export const ITEM_STATUS = [
     }
 ]
 
+export const ORDER_STATUS = [
+    {
+        value:"WAITING",
+        name:"en attente"
+    },
+    {
+        value:"CONFIRMED",
+        name:"confirmé"
+    },
+    {
+        value:"IN_TRANSIT",
+        name:"en livraison"
+    },
+    {
+        value:"DELIVERED",
+        name:"livré"
+    }
+]
+
 export const PROVINCES = [
     {
         name:"Québec"

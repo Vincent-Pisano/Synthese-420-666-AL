@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -37,6 +38,7 @@ class OrderControllerTest {
 
     //global variables
     private Order expectedOrder;
+    private List<Order> expectedOrders;
     private Order givenOrder;
 
     @Test
@@ -108,6 +110,25 @@ class OrderControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
         assertThat(actualAdmin).isEqualTo(expectedOrder);
+    }
+
+    @Test
+    //@Disabled
+    public void testGetAllOrdersOfClient() throws Exception {
+        //Arrange
+        expectedOrders = getOrderList();
+
+        when(service.getAllOrdersOfClient(ID))
+                .thenReturn(java.util.Optional.ofNullable(expectedOrders));
+
+        //Act
+        MvcResult result = mockMvc.perform(get(URL_GET_ALL_ORDER_OF_CLIENT + ID)
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+
+        //Assert
+        MockHttpServletResponse response = result.getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.ACCEPTED.value());
     }
 
 }

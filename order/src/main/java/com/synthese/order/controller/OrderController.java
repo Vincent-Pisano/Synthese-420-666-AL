@@ -44,4 +44,11 @@ public class OrderController {
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
+    @GetMapping(URL_GET_ALL_ORDER_OF_CLIENT)
+    public ResponseEntity<List<Order>> getAllOrdersOfClient(@PathVariable String idClient) {
+        return service.getAllOrdersOfClient(idClient)
+                .map(_order -> ResponseEntity.status(HttpStatus.ACCEPTED).body(_order))
+                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
+
 }

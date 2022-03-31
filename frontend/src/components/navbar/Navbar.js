@@ -1,7 +1,7 @@
 import { React, useContext, useState } from "react";
 import Auth from "../../services/Auth";
 import { useNavigate } from "react-router";
-import { URL_HOME, URL_LOGIN, URL_SUBSCRIBE } from "../../utils/URL";
+import { URL_HOME, URL_LOGIN, URL_ORDER_LIST, URL_SUBSCRIBE } from "../../utils/URL";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { OPTIONS_ADMIN } from "../../utils/PATH";
@@ -69,11 +69,18 @@ function Navbar() {
       );
     } else {
       return (
+        <>
+        <button className="mx-2 btn btn-outline-dark" onClick={() => navigate(URL_ORDER_LIST)}>
+          <i className="bi-cart-fill me-1"></i>
+          Commandes
+        </button>
         <button className="mx-2 btn btn-outline-dark" onClick={() => handleShow()}>
           <i className="bi-cart-fill me-1"></i>
-          Cart
+          Panier
           <span className="badge bg-dark text-white ms-1 rounded-pill">{cart.orderItems !== undefined ? cart.orderItems.length : 0}</span>
         </button>
+        </>
+        
       );
     }
   }

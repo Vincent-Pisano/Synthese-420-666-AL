@@ -14,3 +14,4 @@ export const ERROR_CONFIRM_ORDER = (items) => {
       });
 }
 export const CONFIRM_ORDER = "Votre commande est confirmée ! Redirection en cours"
+export const ERROR_ORDERS_NOT_FOUND = "Aucune commande trouvée ..."

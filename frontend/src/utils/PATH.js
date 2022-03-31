@@ -7,10 +7,12 @@ import {
     URL_LOGIN,
     URL_SUBSCRIBE,
     URL_CONFIRM_ORDER,
-    URL_ADD_ITEM
+    URL_ADD_ITEM,
+    URL_ORDER_LIST
 } from "./URL.js"
 import Auth from '../services/Auth';
 import ConfirmOrder from '../components/confirmOrder/ConfirmOrder';
+import OrderList from '../components/orders/OrderList';
 
 export const OPTIONS_ADMIN = [
     {
@@ -33,6 +35,11 @@ export const ROUTES = [
     {
         link : URL_SUBSCRIBE,
         component: Subscribe,
+        accessValid: Auth.isClient()
+    },
+    {
+        link : URL_ORDER_LIST,
+        component: OrderList,
         accessValid: Auth.isClient()
     },
     {

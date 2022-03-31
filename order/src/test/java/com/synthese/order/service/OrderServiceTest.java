@@ -28,11 +28,9 @@ class OrderServiceTest {
     @Mock
     private OrderRepository orderRepository;
 
-    @Mock
-    private RestTemplate restTemplate;
-
     //global variables
     private Order expectedOrder;
+    private List<Order> expectedOrders;
     private Order givenOrder;
 
     @Test
@@ -86,6 +84,26 @@ class OrderServiceTest {
 
         assertThat(optionalOrder.isPresent()).isTrue();
         assertThat(actualOrder).isEqualTo(expectedOrder);
+
+    }
+
+    @Test
+    //@Disabled
+    public void testGetAllOrdersOfClient() throws Exception {
+        //Arrange
+        expectedOrders = getOrderList();
+
+        when(orderRepository.findAllByClientIdAndIsDisabledFalse(ID))
+                .thenReturn(expectedOrders);
+
+        //Act
+        final Optional<List<Order>> optionalOrder = service.getAllOrdersOfClient(ID);
+
+        //Assert
+        List<Order> actualOrders = optionalOrder.orElse(null);
+
+        assertThat(optionalOrder.isPresent()).isTrue();
+        assertThat(actualOrders).isEqualTo(expectedOrders);
 
     }
 }
