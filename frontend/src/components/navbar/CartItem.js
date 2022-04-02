@@ -18,10 +18,11 @@ const CartItem = ({ orderItem, updateOrder }) => {
         <td className="align-middle">{orderItem.item.price.toFixed(2)}$</td>
         <td className="align-middle qty">
           <input
-            style={{ maxWidth: "3.5rem" }}
+            style={{ maxWidth: "5rem" }}
             type="number"
             className="form-control"
             min="1"
+            max="100"
             step="1"
             name={orderItem.item.name}
             id="update"

@@ -1,9 +1,9 @@
-package com.synthese.order.utils;
+package com.synthese.shipping.utils;
 
-import com.synthese.order.model.Client;
-import com.synthese.order.model.Item;
-import com.synthese.order.model.Order;
-import com.synthese.order.model.OrderItem;
+import com.synthese.shipping.model.Client;
+import com.synthese.shipping.model.Item;
+import com.synthese.shipping.model.Order;
+import com.synthese.shipping.model.OrderItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,20 +11,11 @@ import java.util.List;
 
 public class Utils {
 
-    public static class OrderControllerUrl {
-        public final static String URL_SAVE_ORDER = "/save/order";
-        public final static String URL_CONFIRM_ORDER = "/confirm/order";
-        public final static String URL_GET_WAITING_ORDER = "/get/order/waiting/";
-        public final static String URL_GET_ALL_ORDER_OF_CLIENT = "/get/all/orders/";
+    public static class ShippingControllerUrl {
+        public final static String URL_HANDLE_ORDER = "/handle/order/";
     }
 
     public static final String ID = "62082f071f32b05b7b0706f1";
-
-    public static List<Order> getOrderList() throws IOException {
-        List<Order> orders = new ArrayList<>();
-        orders.add(getOrderWithIDAndOrderItems());
-        return orders;
-    }
 
     public static Order getOrderWithIDAndOrderItems() throws IOException {
         return getOrderWithoutID()

@@ -9,9 +9,10 @@ export const ERROR_QUANTITY_INVALID = "Choisissez une quantité valide..."
 export const CONFIRM_ADD_ITEM_TO_CART = "Votre commande à été mise à jour"
 export const ERROR_UPDATE_CART = "La mise à jour du panier à été compromise..."
 export const ERROR_CONFIRM_ORDER = (items) => {
-    return items.length === 1 ? items.length + " produit n'a pas assez de stock pour valider la commande : " : items.length + " produits n'ont pas assez de stock pour valider la commande : " + items.map(item => {
-        return  ` ${item.quantity} ${item.name} en stock`
-      });
+    return (items.length === 1 ? items.length + " produit n'a pas assez de stock pour valider la commande : " : items.length + " produits n'ont pas assez de stock pour valider la commande : ") 
+    + items.map(item => 
+        ` ${item.quantity} ${item.name} en stock`
+      );
 }
 export const CONFIRM_ORDER = "Votre commande est confirmée ! Redirection en cours"
 export const ERROR_ORDERS_NOT_FOUND = "Aucune commande trouvée ..."

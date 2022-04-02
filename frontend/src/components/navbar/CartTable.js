@@ -9,7 +9,7 @@ const CartTable = ({ cart, setCart }) => {
       (orderItem) => orderItem.item.name === event.target.getAttribute("name")
     );
     let oldOrderItems = cart.orderItems;
-    oldOrderItems[indexOrderItem].quantity = parseInt(event.target.value);
+    oldOrderItems[indexOrderItem].quantity = event.target.value !== "" ? parseInt(event.target.value) : 0;
     return oldOrderItems;
   }
 

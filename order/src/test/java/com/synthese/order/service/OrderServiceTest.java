@@ -8,13 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static com.synthese.order.utils.Utils.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +47,6 @@ class OrderServiceTest {
 
         assertThat(optionalOrder.isPresent()).isTrue();
         assertThat(actualOrder).isEqualTo(expectedOrder);
-
     }
 
     @Test
@@ -57,7 +54,7 @@ class OrderServiceTest {
     public void testConfirmOrder() throws Exception {
         //Arrange
         givenOrder = getOrderWithIDAndOrderItems();
-        when(orderRepository.save(givenOrder)).thenReturn(givenOrder);
+        when(orderRepository.save(any())).thenReturn(givenOrder);
         when(orderRepository.findById(any())).thenReturn(Optional.ofNullable(givenOrder));
 
         //Act

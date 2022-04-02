@@ -55,6 +55,7 @@ const OrderList = () => {
                 <th scope="col">Date</th>
                 <th scope="col">Prix total</th>
                 <th scope="col">Status</th>
+                <th scope="col">Livraison</th>
                 <th scope="col">Informations</th>
               </tr>
             </thead>
@@ -64,9 +65,16 @@ const OrderList = () => {
                   <Order key={i} order={order} onClick={onOrderClicked} />
                 ))
               ) : (
-                <div className="alert alert-danger w-100 m-auto" role="alert">
-                  {errorMessage}
-                </div>
+                <tr>
+                  <td colSpan={5}>
+                    <div
+                      className="alert alert-danger w-100 m-auto"
+                      role="alert"
+                    >
+                      {errorMessage}
+                    </div>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

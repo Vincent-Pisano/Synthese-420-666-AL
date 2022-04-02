@@ -41,7 +41,7 @@ const CartInfoModal = ({ show, handleClose, cart, setCart }) => {
                       fermer
                     </button>
                     <button type="button" className="btn btn-success"
-                    disabled={cart.orderItems === undefined || cart.orderItems.length === 0}
+                    disabled={cart.orderItems === undefined || cart.orderItems.length === 0 || cart.totalPrice <= 0}
                     onClick={() => {
                       handleClose();
                       navigate(URL_CONFIRM_ORDER);

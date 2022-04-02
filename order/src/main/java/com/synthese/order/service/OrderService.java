@@ -14,10 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.synthese.order.utils.Utils.InventoryControllerUrl.*;
+import static com.synthese.order.utils.Utils.ShippingControllerUrl.*;
 
 @Service
 public class OrderService {
@@ -46,18 +48,28 @@ public class OrderService {
         Optional<List<Item>> optionalItems = Optional.empty();
 
         if (orderRepository.findById(order.getId()).isPresent()) {
-            List<Item> items = updateInventory(order);
-            if (items != null)
-                optionalItems = Optional.of(items);
-            else {
-                order.setStatus(Order.OrderStatus.CONFIRMED);
-                orderRepository.save(order);
-            }
+            optionalItems = getItemsWithoutEnoughStock(order);
+            if (optionalItems.isEmpty())
+                createShipment(order);
         }
         return optionalItems;
     }
 
-    private List<Item> updateInventory(Order order) {
+    private Optional<List<Item>> getItemsWithoutEnoughStock(Order order) {
+        Optional<List<Item>> optionalItems = Optional.of(new ArrayList<>());
+
+        try {
+            optionalItems = Optional.ofNullable(updateInventory(order));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("An error occurred during the update of the inventory at confirmOrder.getItems in OrderService.java : "
+                + e.getMessage());
+        }
+
+        return optionalItems;
+    }
+
+    private List<Item> updateInventory(Order order) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = null;
@@ -68,6 +80,18 @@ public class OrderService {
         }
 
         return restTemplate.postForObject(URL_UPDATE_ITEM_QUANTITY, request, List.class);
+    }
+
+    private void createShipment(Order order) {
+        order.setStatus(Order.OrderStatus.CONFIRMED);
+        try {
+            order = restTemplate.getForObject(URL_HANDLE_ORDER + order.getId(), Order.class);
+            orderRepository.save(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("An error occurred during the creation of the shipment at confirmOrder.createShipment in OrderService.java : "
+                    + e.getMessage());
+        }
     }
 
     public Optional<Order> getWaitingOrder(String idClient) {

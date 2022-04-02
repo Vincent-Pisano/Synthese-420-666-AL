@@ -33,7 +33,7 @@ const ConfirmOrder = () => {
     e.preventDefault();
     let order = {
       ...cart,
-      address: address,
+      shippingAddress: address,
     };
     axios
       .post(API_CONFIRM_ORDER, order)
@@ -50,7 +50,7 @@ const ConfirmOrder = () => {
       })
       .catch((error) => {
         setHasClicked(false);
-        if (error.response && error.response.status === 409) {
+        if (error.response && error.response.status === 409 && error.response.data.length > 0) {
           setErrorMessage(ERROR_CONFIRM_ORDER(error.response.data));
         } else if (error.request) {
           setErrorMessage(ERROR_SERVER_NOT_FOUND);

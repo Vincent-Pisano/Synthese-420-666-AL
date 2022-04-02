@@ -1,4 +1,4 @@
-package com.synthese.order.model;
+package com.synthese.shipping.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

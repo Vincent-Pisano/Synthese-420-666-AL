@@ -41,12 +41,8 @@ export const ORDER_STATUS = [
         name:"confirmé"
     },
     {
-        value:"IN_TRANSIT",
-        name:"en livraison"
-    },
-    {
-        value:"DELIVERED",
-        name:"livré"
+        value:"SENT",
+        name:"envoyé"
     }
 ]
 
