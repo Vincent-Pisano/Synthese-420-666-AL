@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+
+  #database MongoDB
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    hostname: mongo
+    env_file: ./.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin-user
+      MONGO_INITDB_ROOT_PASSWORD: admin-password
+      MONGO_INITDB_DATABASE: admin
+    volumes:
+      - mongodata:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+      - main-network
+    ports:
+      - "$MONGO_LOCAL_PORT:$MONGO_DOCKER_PORT"
+    command: [ "--bind_ip", "0.0.0.0" ]
+
+  #front-end
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    container_name: frontend-service
+    image: node-16.3.0
+    env_file: ./.env
+    ports:
+      - "$FRONTEND_LOCAL_PORT:$FRONTEND_DOCKER_PORT"
+    networks:
+      - main-network
+
+  #inventory-service
+  inventory:
+    build:
+      context: ./inventory/
+      dockerfile: Dockerfile
+    container_name: inventory-service
+    image: java-15
+    env_file: ./.env
+    depends_on:
+      - mongo
+    environment:
+      SPRING_APPLICATION_JSON: "$SPRING_APPLICATION_JSON"
+    ports:
+      - "$INVENTORY_LOCAL_PORT:$INVENTORY_DOCKER_PORT"
+    networks:
+      - main-network
+
+  #auth-service
+  auth:
+    build:
+      context: ./auth/
+      dockerfile: Dockerfile
+    container_name: auth-service
+    image: java-15
+    env_file: ./.env
+    depends_on:
+      - mongo
+    environment:
+      SPRING_APPLICATION_JSON: "$SPRING_APPLICATION_JSON"
+    ports:
+      - "$AUTH_LOCAL_PORT:$AUTH_DOCKER_PORT"
+    networks:
+      - main-network
+
+  #order-service
+  order:
+    build:
+      context: ./order/
+      dockerfile: Dockerfile
+    container_name: order-service
+    image: java-15
+    env_file: ./.env
+    depends_on:
+      - mongo
+    environment:
+      SPRING_APPLICATION_JSON: "$SPRING_APPLICATION_JSON"
+    ports:
+      - "$ORDER_LOCAL_PORT:$ORDER_DOCKER_PORT"
+    networks:
+      - main-network
+
+  #shipping-service
+  shipping:
+    build:
+      context: ./shipping/
+      dockerfile: Dockerfile
+    container_name: shipping-service
+    image: java-15
+    env_file: ./.env
+    depends_on:
+      - mongo
+    environment:
+      SPRING_APPLICATION_JSON: "$SPRING_APPLICATION_JSON"
+    ports:
+      - "$SHIPPING_LOCAL_PORT:$SHIPPING_DOCKER_PORT"
+    networks:
+      - main-network
+
+networks:
+  main-network:
+      name: synthese-network
+
+volumes:
+  mongodata:
