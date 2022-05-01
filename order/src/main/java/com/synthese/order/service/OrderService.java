@@ -49,7 +49,7 @@ public class OrderService {
 
         if (orderRepository.findById(order.getId()).isPresent()) {
             optionalItems = getItemsWithoutEnoughStock(order);
-            if (optionalItems.isEmpty())
+            if (optionalItems.isEmpty()) 
                 createShipment(order);
         }
         return optionalItems;
@@ -86,11 +86,13 @@ public class OrderService {
         order.setStatus(Order.OrderStatus.CONFIRMED);
         try {
             order = restTemplate.getForObject(URL_HANDLE_ORDER + order.getId(), Order.class);
-            orderRepository.save(order);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("An error occurred during the creation of the shipment at confirmOrder.createShipment in OrderService.java : "
+            logger.error("An error occurred during the creation of the shipment at the confirmOrder.createShipment in OrderService.java : "
                     + e.getMessage());
+        }
+        finally {
+            orderRepository.save(order);
         }
     }
 

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import static com.synthese.auth.utils.Utils.CROSS_ORIGIN_ALLOWED;
 import static com.synthese.auth.utils.Utils.AuthControllerUrl.*;
 
+import java.util.Optional;
+
 @RestController
-@CrossOrigin(CROSS_ORIGIN_ALLOWED)
+//@CrossOrigin(CROSS_ORIGIN_ALLOWED)
 public class AuthController {
 
     private final AuthService service;

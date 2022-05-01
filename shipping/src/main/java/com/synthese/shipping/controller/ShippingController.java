@@ -10,7 +10,7 @@ import static com.synthese.shipping.utils.Utils.CROSS_ORIGIN_ALLOWED;
 import static com.synthese.shipping.utils.Utils.ShippingControllerUrl.URL_HANDLE_ORDER;
 
 @RestController
-@CrossOrigin(CROSS_ORIGIN_ALLOWED)
+//@CrossOrigin(CROSS_ORIGIN_ALLOWED)
 public class ShippingController {
 
     private final ShippingService service;

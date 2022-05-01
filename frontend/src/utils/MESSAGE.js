@@ -6,6 +6,7 @@ export const CONFIRM_UPDATE_ITEM = "Le produit a été modifié, fermeture en co
 export const ERROR_INVALID_ITEM = "Une erreur est survenue durant l'ajout du produit"
 export const ERROR_NO_ITEM_FOUND_CATEGORY = "Aucun produit n'a été trouvé dans cette catégorie..."
 export const ERROR_QUANTITY_INVALID = "Choisissez une quantité valide..."
+export const ERROR_NOT_LOG_IN = "Veuillez vous connecter au préalable"
 export const CONFIRM_ADD_ITEM_TO_CART = "Votre commande à été mise à jour"
 export const ERROR_UPDATE_CART = "La mise à jour du panier à été compromise..."
 export const ERROR_CONFIRM_ORDER = (items) => {

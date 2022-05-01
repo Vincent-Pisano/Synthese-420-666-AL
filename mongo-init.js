@@ -14,12 +14,12 @@ db.createUser({
   ],
 });
 
-db.synthese.insert({
+db.admin.insert({
   firstName: "Simon",
   lastName: "Kchouderian",
   email: "admin@admin.com",
   password: "admin123",
-  creationDate: { $date: { $numberLong: "1644703495164" } },
+  creationDate: new Date("2022-02-12T22:04:55.164+00:00"),
   isDisabled: false,
   _class: "com.synthese.auth.model.Client",
 });

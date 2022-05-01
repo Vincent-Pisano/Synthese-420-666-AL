@@ -5,8 +5,10 @@ import {
   CONFIRM_ADD_ITEM_TO_CART,
   ERROR_QUANTITY_INVALID,
   ERROR_UPDATE_CART,
+  ERROR_NOT_LOG_IN
 } from "../../../utils/MESSAGE";
 import axios from "axios";
+import Auth from "../../../services/Auth";
 
 const ItemInfoClientModal = ({ handleClose, show, currentItem }) => {
   const [quantity, setQuantity] = useState(0);
@@ -21,50 +23,55 @@ const ItemInfoClientModal = ({ handleClose, show, currentItem }) => {
   }
 
   function addItemToCart() {
-    if (quantity > 0) {
-      let indexOrderItem = cart.orderItems.findIndex(
-        (orderItem) => orderItem.item.id === currentItem.id
-      );
-
-      let newOrderItems =
-        indexOrderItem !== -1
-          ? updateQuantityOrderItem(indexOrderItem)
-          : [
-              ...cart.orderItems,
-              {
-                item: currentItem,
-                quantity: parseInt(quantity),
-              },
-            ];
-
-      let fields = {
-        id: cart.id,
-        client: cart.client,
-        status: cart.status,
-        orderItems: newOrderItems,
-        totalPrice: newOrderItems
-          .map((orderItem) => orderItem.item.price * orderItem.quantity)
-          .reduce((prev, curr) => prev + curr, 0),
-        creationDate: cart.creationDate,
-        isDisabled: cart.isDisabled,
-      };
-      axios
-        .post(SAVE_ORDER, fields)
-        .then((response) => {
-          setCart(response.data);
-          setTimeout(() => {
-            setQuantity(0);
-            setErrorMessage("");
-            handleClose();
-          }, 3000);
-          setErrorMessage(CONFIRM_ADD_ITEM_TO_CART);
-        })
-        .catch((error) => {
-          setErrorMessage(ERROR_UPDATE_CART);
-        });
+    if (Auth.isAuthenticated()) {
+      if (quantity > 0) {
+        let indexOrderItem = cart.orderItems.findIndex(
+          (orderItem) => orderItem.item.id === currentItem.id
+        );
+  
+        let newOrderItems =
+          indexOrderItem !== -1
+            ? updateQuantityOrderItem(indexOrderItem)
+            : [
+                ...cart.orderItems,
+                {
+                  item: currentItem,
+                  quantity: parseInt(quantity),
+                },
+              ];
+  
+        let fields = {
+          id: cart.id,
+          client: cart.client,
+          status: cart.status,
+          orderItems: newOrderItems,
+          totalPrice: newOrderItems
+            .map((orderItem) => orderItem.item.price * orderItem.quantity)
+            .reduce((prev, curr) => prev + curr, 0),
+          creationDate: cart.creationDate,
+          isDisabled: cart.isDisabled,
+        };
+        axios
+          .post(SAVE_ORDER, fields)
+          .then((response) => {
+            setCart(response.data);
+            setTimeout(() => {
+              setQuantity(0);
+              setErrorMessage("");
+              handleClose();
+            }, 3000);
+            setErrorMessage(CONFIRM_ADD_ITEM_TO_CART);
+          })
+          .catch((error) => {
+            setErrorMessage(ERROR_UPDATE_CART);
+          });
+      } else {
+        setErrorMessage(ERROR_QUANTITY_INVALID);
+      }
     } else {
-      setErrorMessage(ERROR_QUANTITY_INVALID);
+      setErrorMessage(ERROR_NOT_LOG_IN);
     }
+    
   }
 
   function showErrorMessage() {

@@ -12,10 +12,10 @@ public class Utils {
     }
 
     public static class InventoryControllerUrl {
-        public final static String URL_UPDATE_ITEM_QUANTITY = "http://localhost:7870/update/items/quantity";
+        public final static String URL_UPDATE_ITEM_QUANTITY = "http://host.docker.internal:7870/update/items/quantity";
     }
 
     public static class ShippingControllerUrl {
-        public final static String URL_HANDLE_ORDER = "http://localhost:7872/handle/order/";
+        public final static String URL_HANDLE_ORDER = "http://host.docker.internal:7872/handle/order/";
     }
 }

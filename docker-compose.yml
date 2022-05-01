@@ -34,30 +34,13 @@ services:
     networks:
       - main-network
 
-  #inventory-service
-  inventory:
-    build:
-      context: ./inventory/
-      dockerfile: Dockerfile
-    container_name: inventory-service
-    image: java-15
-    env_file: ./.env
-    depends_on:
-      - mongo
-    environment:
-      SPRING_APPLICATION_JSON: "$SPRING_APPLICATION_JSON"
-    ports:
-      - "$INVENTORY_LOCAL_PORT:$INVENTORY_DOCKER_PORT"
-    networks:
-      - main-network
-
   #auth-service
   auth:
     build:
       context: ./auth/
       dockerfile: Dockerfile
     container_name: auth-service
-    image: java-15
+    image: java-15-auth
     env_file: ./.env
     depends_on:
       - mongo
@@ -67,6 +50,27 @@ services:
       - "$AUTH_LOCAL_PORT:$AUTH_DOCKER_PORT"
     networks:
       - main-network
+    extra_hosts:
+    - "host.docker.internal:host-gateway" # pas nécessaire dans ce UseCase
+
+  #inventory-service
+  inventory:
+    build:
+      context: ./inventory/
+      dockerfile: Dockerfile
+    container_name: inventory-service
+    image: java-15-inventory
+    env_file: ./.env
+    depends_on:
+      - mongo
+    environment:
+      SPRING_APPLICATION_JSON: "$SPRING_APPLICATION_JSON"
+    ports:
+      - "$INVENTORY_LOCAL_PORT:$INVENTORY_DOCKER_PORT"
+    networks:
+      - main-network
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
   #order-service
   order:
@@ -74,7 +78,7 @@ services:
       context: ./order/
       dockerfile: Dockerfile
     container_name: order-service
-    image: java-15
+    image: java-15-order
     env_file: ./.env
     depends_on:
       - mongo
@@ -84,14 +88,16 @@ services:
       - "$ORDER_LOCAL_PORT:$ORDER_DOCKER_PORT"
     networks:
       - main-network
-
+    extra_hosts:
+    - "host.docker.internal:host-gateway" # pas nécessaire dans ce UseCase
+  
   #shipping-service
   shipping:
     build:
       context: ./shipping/
       dockerfile: Dockerfile
     container_name: shipping-service
-    image: java-15
+    image: java-15-shipping
     env_file: ./.env
     depends_on:
       - mongo
@@ -101,6 +107,8 @@ services:
       - "$SHIPPING_LOCAL_PORT:$SHIPPING_DOCKER_PORT"
     networks:
       - main-network
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
 networks:
   main-network:

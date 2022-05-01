@@ -17,7 +17,7 @@ import static com.synthese.inventory.utils.Utils.*;
 import static com.synthese.inventory.utils.Utils.InventoryControllerUrl.*;
 
 @RestController
-@CrossOrigin(CROSS_ORIGIN_ALLOWED)
+//@CrossOrigin(CROSS_ORIGIN_ALLOWED)
 public class InventoryController {
 
     private final InventoryService service;
